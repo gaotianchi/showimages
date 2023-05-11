@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>上传图片</h1>
+    <h2>在这里上传图片后会重定向到另一个页面查看图片处理结果</h2>
+    <div id="form-container">
+        <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+            {{ form.csrf_token }} <br>
+            {{ form.photo.label }} <br>
+            {{ form.photo }} <br>
+            {{ form.submit }} <br>
+        </form>
+</body>
+</html>
