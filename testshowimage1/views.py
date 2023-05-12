@@ -72,6 +72,17 @@ def clear_session():
 def get_uploads_images(filename):
     """根据图片名获取用户上传图片，需要在会话内"""
     user_id = session['USER_ID']
-    upload_path = get_user_data_path(user_id, app)
+    upload_path = get_user_data_path(user_id, app)[1]
 
     return send_from_directory(upload_path, filename)
+
+
+@app.route('/api/result-images/<status>/<filename>')
+def get_result_images(status, filename):
+    user_id = session['USER_ID']
+    if status == 'ok':
+        path = os.path.join(get_user_data_path(user_id, app)[2], 'ok')
+    else:
+        path = os.path.join(get_user_data_path(user_id, app)[2], 'error')
+
+    return send_from_directory(path, filename)
