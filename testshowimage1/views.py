@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+import datetime
 import os
 import math
 
@@ -13,13 +13,13 @@ from testshowimage1.utils import generate_user_id, get_user_data_path, make_sess
 @app.before_request
 def make_session_permanent():
     session.permanent = True
-    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
+    app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(minutes=30)
 
 
 @app.before_request
 def destroy_session():
     with app.app_context():
-        now = datetime.now()
+        now = datetime.datetime.now().astimezone(datetime.timezone.utc)
         expiration_time = session.get('expiration_time')
         if not expiration_time or expiration_time < now:
             session.clear()
@@ -39,7 +39,7 @@ def upload():
     user_id = session.get('USER_ID', '')
     if not user_id:
         user_id = generate_user_id(request)
-        now = datetime.now()
+        now = datetime.datetime.now()
         make_session(user_id, now, session, app)
     
     upload_path = get_user_data_path(user_id, app)[1]
