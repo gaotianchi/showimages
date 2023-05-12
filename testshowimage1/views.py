@@ -1,3 +1,4 @@
+from datetime import timedelta
 import os
 import math
 
@@ -8,6 +9,12 @@ from testshowimage1.forms import MultiUploadForm
 from testshowimage1.models import ImageProcesser
 from testshowimage1.utils import generate_user_id, get_user_data_path
 
+
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(minutes=30)
+    
 
 @app.route('/')
 def index():

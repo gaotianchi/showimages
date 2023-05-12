@@ -17,6 +17,5 @@ if not os.path.exists(os.path.join(PROJECT_PATH, 'data1')):
 
 app.config['USER_DATA_PATH'] = PROJECT_PATH + '\\data1'
 
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=2)
 
 from testshowimage1 import views
