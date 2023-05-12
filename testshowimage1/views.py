@@ -86,3 +86,14 @@ def get_result_images(status, filename):
         path = os.path.join(get_user_data_path(user_id, app)[2], 'error')
 
     return send_from_directory(path, filename)
+
+
+@app.route('/api/result-reports/<status>/<filename>')
+def get_result_reports(status, filename):
+    user_id = session['USER_ID']
+    if status == 'ok':
+        path = os.path.join(get_user_data_path(user_id, app)[3], 'ok')
+    else:
+        path = os.path.join(get_user_data_path(user_id, app)[3], 'error')
+
+    return send_from_directory(path, filename)

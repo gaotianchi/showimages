@@ -42,9 +42,10 @@ def make_session(user_id, now_time, session, app: Flask):
 
 
 def destory_user_data(session, app: Flask):
-    user_id = session['USER_ID']
-    user_data_path = get_user_data_path(user_id, app)[0]
-    os.rmdir(user_data_path)
+    if session.get('USER_ID', ''):
+        user_id = session['USER_ID']
+        user_data_path = get_user_data_path(user_id, app)[0]
+        os.rmdir(user_data_path)
 
 
 def file_paths_in_dir(dir_path):
