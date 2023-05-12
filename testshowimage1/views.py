@@ -62,7 +62,7 @@ def process():
         handler = ImageProcesser(upload_path, result_image_path, result_report_path)
         handler.process()
 
-    return redirect(url_for('index'))
+    return redirect(url_for('result'))
 
 
 @app.route('/clear-session')
@@ -114,6 +114,29 @@ def get_result_url(status, hash):
     return jsonify(image_url=image_url, report_url=report_url)
 
 
+@app.route('/api/result/page-hashs/<status>')
+def get_page_hashs(status):
+    user_id = session['USER_ID']
+    result_image_path = get_user_data_path(user_id, app)[2]
+
+    page = request.args.get('page', 1, type=int)
+    
+    if status == 'ok':
+        hashs_ok_path = os.path.join(result_image_path, 'ok')
+        image_names = os.listdir(hashs_ok_path)
+    else:
+        hashs_error_path = os.path.join(result_image_path, 'error')
+        image_names = os.listdir(hashs_error_path)
+
+    hashs = paging(image_names, page)[0]
+    image_urls = []
+    for i in hashs:
+        image_url = url_for('get_result_images', status=status, hash=i)
+        image_urls.append(image_url)
+    
+    return jsonify(image_urls)
+
+
 @app.route('/result')
 def result():
     """初始化结果结果界面"""
@@ -128,7 +151,6 @@ def result():
     url = urljoin(base_url, report_url)
     cookies = request.cookies
     message = requests.get(url, cookies=cookies).json()
-    r = message
 
     
     return render_template('t2.html', user_id=session['USER_ID'], hashs=hashs, message=message, num_pages=num_pages)
