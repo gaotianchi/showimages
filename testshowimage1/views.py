@@ -77,9 +77,12 @@ def get_uploads_images(filename):
     return send_from_directory(upload_path, filename)
 
 
-@app.route('/api/result-images/<status>/<filename>')
-def get_result_images(status, filename):
+@app.route('/api/result-images/<status>/<hash>')
+def get_result_images(status, hash: str):
     user_id = session['USER_ID']
+    if hash.endswith('.png'):
+        hash = hash.split('.')[0]
+    filename = hash + '.png'
     if status == 'ok':
         path = os.path.join(get_user_data_path(user_id, app)[2], 'ok')
     else:
@@ -88,12 +91,26 @@ def get_result_images(status, filename):
     return send_from_directory(path, filename)
 
 
-@app.route('/api/result-reports/<status>/<filename>')
-def get_result_reports(status, filename):
+@app.route('/api/result-reports/<status>/<hash>')
+def get_result_reports(status, hash):
     user_id = session['USER_ID']
+    if hash.endswith('.json'):
+        hash = hash.split('.')[0]
+    filename = hash + '.json'
     if status == 'ok':
         path = os.path.join(get_user_data_path(user_id, app)[3], 'ok')
     else:
         path = os.path.join(get_user_data_path(user_id, app)[3], 'error')
 
     return send_from_directory(path, filename)
+
+
+@app.route('/api/result-url/<status>/<hash>')
+def get_result_url(status, hash):
+    result_image_url = url_for('get_result_images', status=status, hash=hash)
+    result_report_url = url_for('get_result_reports', status=status, hash=hash)
+    image_url = result_image_url + '.png'
+    report_url = result_report_url + '.json'
+
+    return jsonify(image_url=image_url, report_url=report_url)
+
