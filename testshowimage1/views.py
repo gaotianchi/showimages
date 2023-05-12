@@ -66,3 +66,12 @@ def process():
 def clear_session():
     session.clear()
     return 'ok'
+
+
+@app.route('/api/uploads/<path:filename>')
+def get_uploads_images(filename):
+    """根据图片名获取用户上传图片，需要在会话内"""
+    user_id = session['USER_ID']
+    upload_path = get_user_data_path(user_id, app)
+
+    return send_from_directory(upload_path, filename)
