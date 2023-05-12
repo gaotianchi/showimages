@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        USER_ID: {{ user_id }}
+    </div>
+    <div id="left">
+        <div id="message-container">
+            <div class="message">
+                <span>POSITION: </span>
+                <span id="position"></span>
+            </div>
+            <div class="message">
+                <span>ERROR1: </span>
+                <span id="error1"></span>
+            </div>
+            <div class="message">
+                <span>ERROR2: </span>
+                <span id="error2"></span>
+            </div>
+        </div>
+
+        <div id="big-image-container">
+            <img id="big-image" src="{{ url_for('get_result_images', status='error', filename=page_images[0]) }}" alt="big-image" height="400px">
+        </div>
+
+    </div>
+    <div id="right">
+
+        <div id="status">
+            <div id="ok"><span>error</span></div>
+            <div id="error"><span>ok</span></div>
+        </div>
+
+        <div id="small-image-container">
+            {% for image_name in page_images %}
+            <img class="small-image" src="{{ url_for('get_result_images', status='error', filename=image_name) }}" alt="small-image" height="200px">
+            {% endfor %}
+        </div>
+
+        <div id="nav-container">
+            {% for i in range(1, num_pages+1) %}
+            <div class="nav">{{ i }}</div>
+            {% endfor %}
+        </div>
+
+    </div>
+</body>
+</html>
