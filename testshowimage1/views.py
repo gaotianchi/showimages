@@ -14,7 +14,7 @@ from testshowimage1.utils import generate_user_id, get_user_data_path, make_sess
 @app.before_request
 def make_session_permanent():
     session.permanent = True
-    app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(minutes=30)
+    app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(hours=3)
 
 
 @app.before_request
@@ -135,6 +135,19 @@ def get_page_hashs(status):
         image_urls.append(image_url)
     
     return jsonify(image_urls)
+
+
+@app.route('/api/num-pages')
+def get_num_pages():
+    user_id = session['USER_ID']
+    result_image_path = get_user_data_path(user_id, app)[2]
+    ok_images = os.listdir(os.path.join(result_image_path, 'ok'))
+    error_images = os.listdir(os.path.join(result_image_path, 'error'))
+
+    ok_num_pages = paging(ok_images)[1]
+    error_num_pages = paging(error_images)[1]
+
+    return jsonify(ok_num_pages=ok_num_pages, error_num_pages=error_num_pages)
 
 
 @app.route('/result')
