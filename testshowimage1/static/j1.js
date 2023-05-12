@@ -3,6 +3,7 @@ const bigImage = document.querySelector('#big-image')
 const positionMessage = document.querySelector('#position')
 const error1Message = document.querySelector('#error1')
 const error2Message = document.querySelector('#error2')
+const imageStatus = document.querySelectorAll('.image-status')
 
 
 
@@ -16,11 +17,38 @@ async function getMessages(imageUrl) {
     return message;
 }
 
+
 function relpaceMessage(message) {
     positionMessage.textContent = message.position;
     error1Message.textContent = message.error1;
     error2Message.textContent = message.error2;
 }
+
+
+function replaceImagesWithUrls(newUrls) {
+    smallImages.forEach(
+        (oldImage, index) => {
+            let newUrl = newUrls[index];
+            oldImage.src = newUrl;
+        }
+    );
+}
+
+
+imageStatus.forEach(
+    (statusBtn) => {
+        statusBtn.addEventListener('click', 
+        async () => {
+            let spanNode = statusBtn.getElementsByTagName('span')[0];
+            let text = spanNode.textContent;
+            let url = `/api/result/page-hashs/${text}`;
+            let response = await fetch(url);
+            let newImageUrls = await response.json();
+            replaceImagesWithUrls(newImageUrls);
+        });
+    }
+);
+
 
 smallImages.forEach(
     (smallImage) => {

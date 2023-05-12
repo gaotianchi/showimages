@@ -20,8 +20,8 @@ class ImageProcesser:
         image_format = str(image_name).split('.')[1]
         image_hash = hashlib.sha256(image_data).hexdigest()
         position = random.randint(1, 10)
-        error1 = random.randint(0, 3)
-        error2 = random.randint(0, 3)
+        error1 = random.choice([0, 1])
+        error2 = random.choice([0, 1])
         new_image_name = f"{image_hash}.{image_format}"
 
         if error1 == 0 and error2 == 0:
