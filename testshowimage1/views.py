@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 import os
 import math
 
@@ -14,6 +14,16 @@ from testshowimage1.utils import generate_user_id, get_user_data_path
 def make_session_permanent():
     session.permanent = True
     app.permanent_session_lifetime = timedelta(minutes=30)
+
+
+@app.before_request
+def destroy_session():
+    with app.app_context():
+        now = datetime.now()
+        for key in list(session.keys()):
+            val = session.get(key)
+            if isinstance(val, dict) and val.get('expiration_time', datetime.max) < now:
+                session.pop(key)
     
 
 @app.route('/')
