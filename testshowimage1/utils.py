@@ -36,3 +36,7 @@ def get_user_data_path(user_id: str, app: Flask):
     return (user_data_path, upload_path, result_image_path, result_report_path)
 
 
+def make_session(user_id, now_time, session, app: Flask):
+    session['expiration_time'] = now_time + app.config['PERMANENT_SESSION_LIFETIME']
+    session['USER_ID'] = user_id
+
