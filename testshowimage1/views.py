@@ -1,6 +1,5 @@
 import datetime
 import os
-import math
 
 from flask import render_template, redirect, url_for, send_from_directory, jsonify, request, session
 

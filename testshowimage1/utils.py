@@ -45,3 +45,12 @@ def destory_user_data(session, app: Flask):
     user_id = session['USER_ID']
     user_data_path = get_user_data_path(user_id, app)[0]
     os.rmdir(user_data_path)
+
+
+def file_paths_in_dir(dir_path):
+    file_names = os.listdir(dir_path)
+    result = []
+    for i in file_names:
+        file_path = os.path.join(dir_path, i)
+        result.append(file_path)
+    return result
