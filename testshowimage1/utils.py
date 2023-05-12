@@ -58,10 +58,14 @@ def file_paths_in_dir(dir_path):
     return result
 
 
-def paging(image_hash, page=1, per_page=3):
-    num_pages = math.ceil(len(image_hash) / per_page)
+def paging(image_names, page=1, per_page=3):
+    num_pages = math.ceil(len(image_names) / per_page)
     start = (page - 1) * per_page
     end = start + per_page
-    page_images = image_hash[start:end]
+    page_images = image_names[start:end]
+    hashs = []
+    for image in page_images:
+        hash = image.split('.')[0]
+        hashs.append(hash)
     
-    return page_images, num_pages
+    return hashs, num_pages

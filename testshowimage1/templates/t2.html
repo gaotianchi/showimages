@@ -14,20 +14,20 @@
         <div id="message-container">
             <div class="message">
                 <span>POSITION: </span>
-                <span id="position"></span>
+                <span id="position">{{ message.position }}</span>
             </div>
             <div class="message">
                 <span>ERROR1: </span>
-                <span id="error1"></span>
+                <span id="error1">{{ message.error1 }}</span>
             </div>
             <div class="message">
                 <span>ERROR2: </span>
-                <span id="error2"></span>
+                <span id="error2">{{ message.error2 }}</span>
             </div>
         </div>
 
         <div id="big-image-container">
-            <img id="big-image" src="{{ url_for('get_result_images', status='error', hash=page_images[0]) }}" alt="big-image" height="400px">
+            <img id="big-image" src="{{ url_for('get_result_images', status='error', hash=hashs[0]) }}" alt="big-image" height="400px">
         </div>
 
     </div>
@@ -39,8 +39,8 @@
         </div>
 
         <div id="small-image-container">
-            {% for image_name in page_images %}
-            <img class="small-image" src="{{ url_for('get_result_images', status='error', hash=image_name) }}" alt="small-image" height="200px">
+            {% for hash in hashs %}
+            <img class="small-image" src="{{ url_for('get_result_images', status='error', hash=hash) }}" alt="small-image" height="200px">
             {% endfor %}
         </div>
 
