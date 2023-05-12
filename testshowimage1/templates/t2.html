@@ -27,7 +27,7 @@
         </div>
 
         <div id="big-image-container">
-            <img id="big-image" src="{{ url_for('get_result_images', status='error', filename=page_images[0]) }}" alt="big-image" height="400px">
+            <img id="big-image" src="{{ url_for('get_result_images', status='error', hash=page_images[0]) }}" alt="big-image" height="400px">
         </div>
 
     </div>
@@ -40,7 +40,7 @@
 
         <div id="small-image-container">
             {% for image_name in page_images %}
-            <img class="small-image" src="{{ url_for('get_result_images', status='error', filename=image_name) }}" alt="small-image" height="200px">
+            <img class="small-image" src="{{ url_for('get_result_images', status='error', hash=image_name) }}" alt="small-image" height="200px">
             {% endfor %}
         </div>
 

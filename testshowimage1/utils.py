@@ -1,3 +1,4 @@
+import math
 import os
 import time
 
@@ -55,3 +56,12 @@ def file_paths_in_dir(dir_path):
         file_path = os.path.join(dir_path, i)
         result.append(file_path)
     return result
+
+
+def paging(image_hash, page=1, per_page=3):
+    num_pages = math.ceil(len(image_hash) / per_page)
+    start = (page - 1) * per_page
+    end = start + per_page
+    page_images = image_hash[start:end]
+    
+    return page_images, num_pages
