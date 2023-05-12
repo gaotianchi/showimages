@@ -40,3 +40,8 @@ def make_session(user_id, now_time, session, app: Flask):
     session['expiration_time'] = now_time + app.config['PERMANENT_SESSION_LIFETIME']
     session['USER_ID'] = user_id
 
+
+def destory_user_data(session, app: Flask):
+    user_id = session['USER_ID']
+    user_data_path = get_user_data_path(user_id, app)[0]
+    os.rmdir(user_data_path)

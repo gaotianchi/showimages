@@ -7,7 +7,7 @@ from flask import render_template, redirect, url_for, send_from_directory, jsoni
 from testshowimage1 import app
 from testshowimage1.forms import MultiUploadForm
 from testshowimage1.models import ImageProcesser
-from testshowimage1.utils import generate_user_id, get_user_data_path, make_session
+from testshowimage1.utils import generate_user_id, get_user_data_path, make_session, destory_user_data
 
 
 @app.before_request
@@ -23,6 +23,7 @@ def destroy_session():
         expiration_time = session.get('expiration_time')
         if not expiration_time or expiration_time < now:
             session.clear()
+            destory_user_data(session, app)
 
     return None
     
