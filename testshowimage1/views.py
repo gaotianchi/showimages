@@ -147,7 +147,7 @@ def get_num_pages():
     ok_num_pages = paging(ok_images)[1]
     error_num_pages = paging(error_images)[1]
 
-    return jsonify(ok_num_pages=ok_num_pages, error_num_pages=error_num_pages)
+    return jsonify(ok=ok_num_pages, error=error_num_pages)
 
 
 @app.route('/result')

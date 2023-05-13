@@ -1,9 +1,11 @@
-const smallImages = document.querySelectorAll('.small-image')
-const bigImage = document.querySelector('#big-image')
-const positionMessage = document.querySelector('#position')
-const error1Message = document.querySelector('#error1')
-const error2Message = document.querySelector('#error2')
-const imageStatus = document.querySelectorAll('.image-status')
+const smallImages = document.querySelectorAll('.small-image');
+const bigImage = document.querySelector('#big-image');
+const positionMessage = document.querySelector('#position');
+const error1Message = document.querySelector('#error1');
+const error2Message = document.querySelector('#error2');
+const imageStatus = document.querySelectorAll('.image-status');
+const navContainer = document.querySelector('#nav-container');
+const navElement = document.querySelectorAll('.nav');
 
 
 
@@ -32,6 +34,28 @@ function replaceImagesWithUrls(newUrls) {
             oldImage.src = newUrl;
         }
     );
+}
+
+
+function removeNavElement() {
+    for (var i = 0; i < navElement.length; i++) {
+        navElement[i].parentNode.removeChild(navElement[i]);
+    }
+}
+
+async function renderNav(status) {
+    let response = await fetch('/api/num-pages');
+    let items = await response.json();
+    let num_pages = items[status];
+    removeNavElement();
+
+    for (let i=1; i <= Number(num_pages); i++) {
+        let newNavNode = document.createElement("div");
+        newNavNode.setAttribute('class', 'nav');
+        let divText = document.createTextNode('1');
+        newNavNode.appendChild(divText);
+        navContainer.appendChild(newNavNode);
+    }
 }
 
 
