@@ -86,7 +86,7 @@ def update_config(session, app: Flask):
     data[user_id] = expiration_time
 
     with open(app.config["USER_CONFIG"], "w") as f:
-        json.dump(data, f, cls=DatetimeEncoder)
+        json.dump(data, f, indent=4, cls=DatetimeEncoder)
 
 
 class DatetimeEncoder(json.JSONEncoder):
