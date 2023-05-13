@@ -29,6 +29,14 @@ function relpaceMessage(message) {
 }
 
 
+function removeOldImageElements() {
+    let imageElements = document.querySelectorAll(".small-image");
+    for (var i = 0; i < imageElements.length; i++) {
+        imageElements[i].parentNode.removeChild(imageElements[i]);
+    }
+}
+
+
 function replaceImagesWithUrls(newUrls) {
     smallImages.forEach(
         (oldImage, index) => {
