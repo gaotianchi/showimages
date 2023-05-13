@@ -12,17 +12,6 @@ from testshowimage1.utils import generate_user_id, get_user_data_path, make_sess
 
     
 
-@app.before_request
-def destroy_session():
-    now = datetime.datetime.now().astimezone(datetime.timezone.utc)
-    expiration_time = session.get('expiration_time')
-    if not expiration_time or expiration_time < now:
-        session.clear()
-        destory_user_data(session, app)
-
-    return None
-    
-
 @app.route('/')
 def index():
     form = MultiUploadForm()
