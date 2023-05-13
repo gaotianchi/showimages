@@ -10,29 +10,15 @@ from testshowimage1.forms import MultiUploadForm
 from testshowimage1.models import ImageProcesser
 from testshowimage1.utils import generate_user_id, get_user_data_path, make_session, destory_user_data, paging
 
-
-@app.before_request
-def make_config_file():
-    config_path = os.path.join(app["USER_DATA_PATH"], 'config.json')
-    if not os.path.exists(config_path):
-        config_file = open(config_path, 'w')
-        config_file.close()
-
-
-@app.before_request
-def make_session_permanent():
-    session.permanent = True
-    app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(hours=3)
-
+    
 
 @app.before_request
 def destroy_session():
-    with app.app_context():
-        now = datetime.datetime.now().astimezone(datetime.timezone.utc)
-        expiration_time = session.get('expiration_time')
-        if not expiration_time or expiration_time < now:
-            session.clear()
-            destory_user_data(session, app)
+    now = datetime.datetime.now().astimezone(datetime.timezone.utc)
+    expiration_time = session.get('expiration_time')
+    if not expiration_time or expiration_time < now:
+        session.clear()
+        destory_user_data(session, app)
 
     return None
     
