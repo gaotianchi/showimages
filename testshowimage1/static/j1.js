@@ -109,3 +109,24 @@ smallImages.forEach(
         });
     }
 );
+
+
+function initNavElements() {
+    let navElements = document.querySelectorAll('.nav');
+    navElements.forEach((navElement) => {
+        navElement.addEventListener('click', async () => {
+            let statusNode = document.querySelector(".image-status.active");
+            let text = statusNode.textContent;
+            let page = navElement.textContent;
+            let url = `/api/result/page-hashs/${text}?page=${page}`;
+            let response = await fetch(url);
+            let newImageUrls = await response.json();
+            replaceImagesWithUrls(newImageUrls);
+        });
+    });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    // 初始化页面时注册分页导航栏的点击事件
+    initNavElements();
+});
