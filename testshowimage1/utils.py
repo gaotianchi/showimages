@@ -76,15 +76,17 @@ def paging(image_names, page=1, per_page=3):
 def update_config(session, app: Flask):
     user_id = session["USER_ID"]
     expiration_time = session["EXPIRATION_TIME"]
-    
-    with open(app.config["USER_CONFIG"], 'r') as f:
-        users_data = json.load(f)
-    
-    users_data[user_id] = expiration_time
-    json_data = json.dumps(users_data, cls=DatetimeEncoder)
 
-    with open(app.config["USER_CONFIG"], 'w') as f:
-        json.dump(json_data, f)
+    try:
+        with open(app.config["USER_CONFIG"], "r") as f:
+            data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        data = {}
+
+    data[user_id] = expiration_time
+
+    with open(app.config["USER_CONFIG"], "w") as f:
+        json.dump(data, f, cls=DatetimeEncoder)
 
 
 class DatetimeEncoder(json.JSONEncoder):

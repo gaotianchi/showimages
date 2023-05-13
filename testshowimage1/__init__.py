@@ -20,8 +20,8 @@ if not os.path.exists(os.path.join(PROJECT_PATH, 'data1')):
 
 config_path = os.path.join(os.path.join(PROJECT_PATH, 'data1'), 'config.json')
 if not os.path.exists(config_path):
-    with open(config_path, 'w') as f:
-        json.dump({}, f)
+    c = open(config_path, 'w')
+    c.close()
 
 
 app.config['USER_DATA_PATH'] = PROJECT_PATH + '\\data1'
