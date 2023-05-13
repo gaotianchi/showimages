@@ -5,7 +5,7 @@ const error1Message = document.querySelector('#error1');
 const error2Message = document.querySelector('#error2');
 const imageStatus = document.querySelectorAll('.image-status');
 const navContainer = document.querySelector('#nav-container');
-const navElement = document.querySelectorAll('.nav');
+
 
 
 
@@ -38,6 +38,7 @@ function replaceImagesWithUrls(newUrls) {
 
 
 function removeNavElement() {
+    let navElement = document.querySelectorAll('.nav');
     for (var i = 0; i < navElement.length; i++) {
         navElement[i].parentNode.removeChild(navElement[i]);
     }
@@ -52,7 +53,7 @@ async function renderNav(status) {
     for (let i=1; i <= Number(num_pages); i++) {
         let newNavNode = document.createElement("div");
         newNavNode.setAttribute('class', 'nav');
-        let divText = document.createTextNode('1');
+        let divText = document.createTextNode(i);
         newNavNode.appendChild(divText);
         navContainer.appendChild(newNavNode);
     }
@@ -65,6 +66,7 @@ imageStatus.forEach(
         async () => {
             let spanNode = statusBtn.getElementsByTagName('span')[0];
             let text = spanNode.textContent;
+            await renderNav(text);
             let url = `/api/result/page-hashs/${text}`;
             let response = await fetch(url);
             let newImageUrls = await response.json();
