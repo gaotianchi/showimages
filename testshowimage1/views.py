@@ -12,6 +12,14 @@ from testshowimage1.utils import generate_user_id, get_user_data_path, make_sess
 
 
 @app.before_request
+def make_config_file():
+    config_path = os.path.join(app["USER_DATA_PATH"], 'config.json')
+    if not os.path.exists(config_path):
+        config_file = open(config_path, 'w')
+        config_file.close()
+
+
+@app.before_request
 def make_session_permanent():
     session.permanent = True
     app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(hours=3)
