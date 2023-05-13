@@ -58,6 +58,17 @@ async function renderNav(status) {
         let divText = document.createTextNode(i);
         newNavNode.appendChild(divText);
         navContainer.appendChild(newNavNode);
+
+        newNavNode.addEventListener('click', 
+            async () => {
+                let statusNode = document.querySelector(".image-status.active");
+                let text = statusNode.textContent;
+                let page = newNavNode.textContent;
+                let url = `/api/result/page-hashs/${text}?page=${page}`;
+                let response = await fetch(url);
+                let newImageUrls = await response.json();
+                replaceImagesWithUrls(newImageUrls);
+            });
     }
 }
 
@@ -95,18 +106,6 @@ smallImages.forEach(
             let message = await getMessages(smallImageUrl)
             bigImage.src = smallImageUrl;
             relpaceMessage(message);
-        });
-    }
-);
-
-
-let navElements = document.querySelectorAll('.nav');
-navElements.forEach(
-    (navElement) => {
-        navElement.addEventListener('click', 
-        async () => {
-            let page = navElement.textContent;
-            let url = `/api/result/page-hashs/${page}`;
         });
     }
 );
