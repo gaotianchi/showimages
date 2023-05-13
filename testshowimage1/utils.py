@@ -1,3 +1,4 @@
+import datetime
 import json
 import math
 import os
@@ -77,9 +78,17 @@ def update_config(session, app: Flask):
     expiration_time = session["EXPIRATION_TIME"]
     
     with open(app.config["USER_CONFIG"], 'r') as f:
-        users_data = dict(json.loads(f.read()))
+        users_data = json.load(f)
     
     users_data[user_id] = expiration_time
+    json_data = json.dumps(users_data, cls=DatetimeEncoder)
 
     with open(app.config["USER_CONFIG"], 'w') as f:
-        json.dump(users_data, f)
+        json.dump(json_data, f)
+
+
+class DatetimeEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return obj.isoformat()
+        return json.JSONEncoder.default(self, obj)
