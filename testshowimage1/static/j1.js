@@ -5,6 +5,8 @@ const error1Message = document.querySelector('#error1');
 const error2Message = document.querySelector('#error2');
 const imageStatus = document.querySelectorAll('.image-status');
 const navContainer = document.querySelector('#nav-container');
+const okStatus = document.querySelector('#ok');
+const errorStatus = document.querySelector('#error');
 
 
 
@@ -66,6 +68,15 @@ imageStatus.forEach(
         async () => {
             let spanNode = statusBtn.getElementsByTagName('span')[0];
             let text = spanNode.textContent;
+            if (text == 'error') {
+                errorStatus.className = "image-status active";
+                okStatus.className = "image-status";
+            }
+            else {
+                okStatus.className = "image-status active";
+                errorStatus.className = "image-status";
+            }
+
             await renderNav(text);
             let url = `/api/result/page-hashs/${text}`;
             let response = await fetch(url);
@@ -84,6 +95,18 @@ smallImages.forEach(
             let message = await getMessages(smallImageUrl)
             bigImage.src = smallImageUrl;
             relpaceMessage(message);
+        });
+    }
+);
+
+
+let navElements = document.querySelectorAll('.nav');
+navElements.forEach(
+    (navElement) => {
+        navElement.addEventListener('click', 
+        async () => {
+            let page = navElement.textContent;
+            let url = `/api/result/page-hashs/${page}`;
         });
     }
 );
