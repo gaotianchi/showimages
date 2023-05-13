@@ -163,4 +163,5 @@ function initNavElements() {
 document.addEventListener("DOMContentLoaded", () => {
     // 初始化页面时注册分页导航栏的点击事件
     initNavElements();
+    initImgElements();
 });
