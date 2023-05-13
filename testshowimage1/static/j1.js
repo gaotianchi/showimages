@@ -1,4 +1,3 @@
-const smallImages = document.querySelectorAll('.small-image');
 const bigImage = document.querySelector('#big-image');
 const positionMessage = document.querySelector('#position');
 const error1Message = document.querySelector('#error1');
@@ -7,6 +6,7 @@ const imageStatus = document.querySelectorAll('.image-status');
 const navContainer = document.querySelector('#nav-container');
 const okStatus = document.querySelector('#ok');
 const errorStatus = document.querySelector('#error');
+const smallImageContainer = document.querySelector("#small-image-container");
 
 
 
@@ -33,6 +33,29 @@ function removeOldImageElements() {
     let imageElements = document.querySelectorAll(".small-image");
     for (var i = 0; i < imageElements.length; i++) {
         imageElements[i].parentNode.removeChild(imageElements[i]);
+    }
+}
+
+
+async function renderImages(imageUrls) {
+    removeOldImageElements();
+    for (let i = 0; i < imageUrls.length; i++) {
+        let newImageNode = document.createElement("img");
+        newImageNode.setAttribute("class", "small-image");
+        newImageNode.setAttribute("src", imageUrls[i]);
+        newImageNode.setAttribute("height", "200px");
+        newImageNode.setAttribute("alt", "small-image");
+
+        smallImageContainer.appendChild(newImageNode);
+
+        newImageNode.addEventListener("click", 
+        async () => {
+            let smallImageUrl = newImageNode.src;
+            let message = await getMessages(smallImageUrl)
+            bigImage.src = smallImageUrl;
+            relpaceMessage(message);
+        });
+
     }
 }
 
@@ -75,7 +98,7 @@ async function renderNav(status) {
                 let url = `/api/result/page-hashs/${text}?page=${page}`;
                 let response = await fetch(url);
                 let newImageUrls = await response.json();
-                replaceImagesWithUrls(newImageUrls);
+                await renderImages(newImageUrls);
             });
     }
 }
@@ -100,23 +123,26 @@ imageStatus.forEach(
             let url = `/api/result/page-hashs/${text}`;
             let response = await fetch(url);
             let newImageUrls = await response.json();
-            replaceImagesWithUrls(newImageUrls);
+            await renderImages(newImageUrls);
         });
     }
 );
 
 
-smallImages.forEach(
-    (smallImage) => {
-        smallImage.addEventListener('click', 
-        async () => {
-            let smallImageUrl = smallImage.src;
-            let message = await getMessages(smallImageUrl)
-            bigImage.src = smallImageUrl;
-            relpaceMessage(message);
-        });
-    }
-);
+function initImgElements() {
+    let smallImages = document.querySelectorAll('.small-image');
+    smallImages.forEach(
+        (smallImage) => {
+            smallImage.addEventListener('click', 
+            async () => {
+                let smallImageUrl = smallImage.src;
+                let message = await getMessages(smallImageUrl)
+                bigImage.src = smallImageUrl;
+                relpaceMessage(message);
+            });
+        }
+    );
+}
 
 
 function initNavElements() {
@@ -129,7 +155,7 @@ function initNavElements() {
             let url = `/api/result/page-hashs/${text}?page=${page}`;
             let response = await fetch(url);
             let newImageUrls = await response.json();
-            replaceImagesWithUrls(newImageUrls);
+            await renderImages(newImageUrls);
         });
     });
 }
