@@ -1,3 +1,4 @@
+import json
 import math
 import os
 import time
@@ -38,7 +39,7 @@ def get_user_data_path(user_id: str, app: Flask):
 
 
 def make_session(user_id, now_time, session, app: Flask):
-    session['expiration_time'] = now_time + app.config['PERMANENT_SESSION_LIFETIME']
+    session['EXPIRATION_TIME'] = now_time + app.config['PERMANENT_SESSION_LIFETIME']
     session['USER_ID'] = user_id
 
 
@@ -69,3 +70,16 @@ def paging(image_names, page=1, per_page=3):
         hashs.append(hash)
     
     return hashs, num_pages
+
+
+def update_config(session, app: Flask):
+    user_id = session["USER_ID"]
+    expiration_time = session["EXPIRATION_TIME"]
+    
+    with open(app.config["USER_CONFIG"], 'r') as f:
+        users_data = dict(json.loads(f.read()))
+    
+    users_data[user_id] = expiration_time
+
+    with open(app.config["USER_CONFIG"], 'w') as f:
+        json.dump(users_data, f)

@@ -1,15 +1,22 @@
-import datetime
 import os
-import requests
 from urllib.parse import urljoin
 
+import datetime
+import requests
 from flask import render_template, redirect, url_for, send_from_directory, jsonify, request, session
 
 from testshowimage1 import app
 from testshowimage1.forms import MultiUploadForm
 from testshowimage1.models import ImageProcesser
-from testshowimage1.utils import generate_user_id, get_user_data_path, make_session, destory_user_data, paging
+from testshowimage1.utils import generate_user_id, get_user_data_path, make_session, paging, update_config
 
+
+@app.before_request
+def update_session():
+    if session.get("USER_ID", ""):
+        now = datetime.datetime.now().astimezone(datetime.timezone.utc)
+        session["EXPIRATION_TIME"] = now + app.config['PERMANENT_SESSION_LIFETIME']
+        update_config(session, app)
     
 
 @app.route('/')
