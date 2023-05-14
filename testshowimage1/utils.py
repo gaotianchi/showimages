@@ -141,10 +141,12 @@ def destory_user_data(app: Flask):
                     print(f"{u_id} session 已过期，需要删除")
                     user_data_path = os.path.join(app.config['USER_DATA_PATH'], u_id)
                     shutil.rmtree(user_data_path)
-                    del config[u_id]
+                    delete_user_config(u_id, app)
                     print(f"成功删除用户{u_id}的数据文件夹")
                 else:
                     print(f"用户 {u_id} 的 session 还有效")
+        else:
+            print("配置信息为空")
 
 
 

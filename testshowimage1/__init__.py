@@ -15,7 +15,7 @@ app = Flask('testshowimage1')
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['FLASK_APP'] = os.getenv('FLASK_APP')
-app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(seconds=60)
+app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(hours=2)
 
 
 if not os.path.exists(os.path.join(PROJECT_PATH, 'data1')):
@@ -34,7 +34,7 @@ def start_scheduler(scheduler: BlockingScheduler):
     scheduler.start()
 
 scheduler = BlockingScheduler()
-scheduler.add_job(destory_user_data, 'interval', seconds=3, args=[app])
+scheduler.add_job(destory_user_data, 'interval', seconds=3600, args=[app])
 scheduler_thread = threading.Thread(target=start_scheduler, args=[scheduler])
 scheduler_thread.start()
 
