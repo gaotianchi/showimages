@@ -2,8 +2,10 @@ import datetime
 import json
 import math
 import os
+import shutil
 import time
 
+from apscheduler.schedulers.blocking import BlockingScheduler
 from flask import Flask, Request
 from hashlib import sha256
 
@@ -56,13 +58,6 @@ def make_session(user_id, now_time, session, app: Flask):
         json.dump(data, f, indent=4, cls=DatetimeEncoder)
 
 
-def destory_user_data(session, app: Flask):
-    if session.get('USER_ID', ''):
-        user_id = session['USER_ID']
-        user_data_path = get_user_data_path(user_id, app)[0]
-        os.rmdir(user_data_path)
-
-
 def file_paths_in_dir(dir_path):
     file_names = os.listdir(dir_path)
     result = []
@@ -112,8 +107,46 @@ def update_config(session, app: Flask):
         json.dump(data, f, indent=4, cls=DatetimeEncoder)
 
 
+def delete_user_config(user_id, app: Flask):
+    try:
+        with open(app.config["USER_CONFIG"], "r") as f:
+            data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        data = {}
+    if data:
+        data = data.copy()
+        del data[user_id]
+
+        with open(app.config["USER_CONFIG"], "w") as f:
+            json.dump(data, f, indent=4, cls=DatetimeEncoder)
+
+
 class DatetimeEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
             return obj.isoformat()
         return json.JSONEncoder.default(self, obj)
+    
+
+def destory_user_data(app: Flask):
+    with app.app_context():
+        config: dict = read_config(app)
+        if config:
+            now = datetime.datetime.now().astimezone(datetime.timezone.utc)
+
+            for u_id, e_time in config.items():
+                datetime_obj = datetime.datetime.strptime(e_time, "%Y-%m-%dT%H:%M:%S.%f%z")
+                a = now > datetime_obj
+                if now > datetime_obj:
+                    print(f"{u_id} session 已过期，需要删除")
+                    user_data_path = os.path.join(app.config['USER_DATA_PATH'], u_id)
+                    shutil.rmtree(user_data_path)
+                    del config[u_id]
+                    print(f"成功删除用户{u_id}的数据文件夹")
+                else:
+                    print(f"用户 {u_id} 的 session 还有效")
+
+
+
+if __name__ == "__main__":
+    pass
