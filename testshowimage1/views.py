@@ -8,12 +8,14 @@ from flask import render_template, redirect, url_for, send_from_directory, jsoni
 from testshowimage1 import app
 from testshowimage1.forms import MultiUploadForm
 from testshowimage1.models import ImageProcesser
-from testshowimage1.utils import generate_user_id, get_user_data_path, make_session, paging, update_config
+from testshowimage1.utils import generate_user_id, get_user_data_path, make_session, paging, update_config, read_config
 
 
 @app.before_request
 def update_session():
-    if session.get("USER_ID", ""):
+    config: dict = read_config(app)
+    user_id = session.get("USER_ID", "")
+    if user_id in config.keys():
         now = datetime.datetime.now().astimezone(datetime.timezone.utc)
         session["EXPIRATION_TIME"] = now + app.config['PERMANENT_SESSION_LIFETIME']
         update_config(session, app)

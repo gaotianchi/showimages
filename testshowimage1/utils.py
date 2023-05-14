@@ -43,6 +43,18 @@ def make_session(user_id, now_time, session, app: Flask):
     session['EXPIRATION_TIME'] = now_time + app.config['PERMANENT_SESSION_LIFETIME']
     session['USER_ID'] = user_id
 
+    try:
+        with open(app.config["USER_CONFIG"], "r") as f:
+            data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        data = {}
+
+    data = data.copy()
+    data[user_id] = session['EXPIRATION_TIME']
+
+    with open(app.config["USER_CONFIG"], "w") as f:
+        json.dump(data, f, indent=4, cls=DatetimeEncoder)
+
 
 def destory_user_data(session, app: Flask):
     if session.get('USER_ID', ''):
@@ -78,7 +90,7 @@ def read_config(app: Flask):
         with open(app.config["USER_CONFIG"], "r") as f:
             data = json.load(f)
     except:
-        return "Fail to read config"
+        return {}
     else:
         return data
 
