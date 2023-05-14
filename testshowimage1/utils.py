@@ -73,6 +73,16 @@ def paging(image_names, page=1, per_page=3):
     return hashs, num_pages
 
 
+def read_config(app: Flask):
+    try:
+        with open(app.config["USER_CONFIG"], "r") as f:
+            data = json.load(f)
+    except:
+        return "Fail to read config"
+    else:
+        return data
+
+
 def update_config(session, app: Flask):
     user_id = session["USER_ID"]
     expiration_time = session["EXPIRATION_TIME"]
@@ -83,6 +93,7 @@ def update_config(session, app: Flask):
     except (FileNotFoundError, json.JSONDecodeError):
         data = {}
 
+    data = data.copy()
     data[user_id] = expiration_time
 
     with open(app.config["USER_CONFIG"], "w") as f:
