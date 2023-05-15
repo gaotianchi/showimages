@@ -24,6 +24,15 @@ def generate_user_id(request: Request):
     return user_id
 
 
+def init_user(user_id: str, app: Flask):
+    """初始化用户的文件夹结构"""
+    user_data_path = os.path.join(app.config["USER_DATA_PATH"], user_id)
+    user_upload_path = os.path.join(user_data_path, "uploads")
+
+    for i in (user_data_path, user_upload_path):
+        os.makedirs(i)
+
+
 def update_user_session(app: Flask, session: SessionMixin, request: Request):
     """用户的每次请求都会更新session有效期"""
 
@@ -52,3 +61,5 @@ def update_user_session(app: Flask, session: SessionMixin, request: Request):
 
     with open(app.config["USER_EXPIRATION_TIME_LOG"], "w") as f:
         json.dump(data, f, indent=4, cls=DatetimeEncoder)
+
+
