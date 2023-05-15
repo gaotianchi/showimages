@@ -1,0 +1,2 @@
+FLASK_APP=showimages
+FLASK_ENV=development
