@@ -108,3 +108,4 @@ venv.bak/
 .trash.txt
 history
 userdata
+test**
