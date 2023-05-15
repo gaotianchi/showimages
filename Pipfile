@@ -12,6 +12,7 @@ wtforms = "*"
 flask-wtf = "*"
 requests = "*"
 apscheduler = "*"
+flask-uploads = "*"
 
 [dev-packages]
 watchdog = "*"
