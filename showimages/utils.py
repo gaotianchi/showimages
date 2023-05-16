@@ -33,33 +33,11 @@ def init_user(user_id: str, app: Flask):
         os.makedirs(i)
 
 
-def update_user_session(app: Flask, session: SessionMixin, request: Request):
-    """用户的每次请求都会更新session有效期"""
+def get_user_path(user_id: str, app: Flask) -> dict:
+    """获取用户得文件路径"""
 
-    class DatetimeEncoder(json.JSONEncoder):
-        def default(self, obj):
-            if isinstance(obj, datetime.datetime):
-                return obj.isoformat()
-            return json.JSONEncoder.default(self, obj)
-        
-    now = datetime.datetime.now()
-    user_id = session.get("USER_ID", "")
-    session['EXPIRATION_TIME'] = now + app.config["PERMANENT_SESSION_LIFETIME"]
-    
-    if not user_id:
-        user_id = generate_user_id(request)
-        session['USER_ID'] = user_id
+    user_data_path = os.path.join(app.config["USER_DATA_PATH"], user_id)
+    user_upload_path = os.path.join(user_data_path, "uploads")
+    user_result_path = os.path.join(user_data_path, "results")
 
-    try:
-        with open(app.config["USER_EXPIRATION_TIME_LOG"], "r") as f:
-            data = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        data = {}
-
-    data = data.copy()
-    data[user_id] = session['EXPIRATION_TIME']
-
-    with open(app.config["USER_EXPIRATION_TIME_LOG"], "w") as f:
-        json.dump(data, f, indent=4, cls=DatetimeEncoder)
-
-
+    return dict(user_data_path=user_data_path, user_upload_path=user_upload_path, user_result_path=user_result_path)
