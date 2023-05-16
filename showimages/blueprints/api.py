@@ -48,4 +48,15 @@ def upload_image():
     else:
         success = False
 
-    return "OK" if success else "FAIL"
+    return redirect(url_for("api.process_image"))
+
+
+@api_bp.route("/process")
+def process_image():
+    user_id = session.get("USER_ID")
+    upload_path = get_user_path(user_id, current_app)["user_upload_path"]
+    result_path = get_user_path(user_id, current_app)["user_result_path"]
+    handler = ImageProcessor(upload_path, result_path)
+    handler.process()
+
+    return "OK"
