@@ -9,6 +9,36 @@ import os
 import random
 
 from PIL import Image
+import redis
+
+
+class RedisHandler:
+    """Redis数据库操作句柄"""
+
+    def __init__(self, host="localhost", port=6379, decode_responses=True) -> None:
+        pool = redis.ConnectionPool(host, port, decode_responses)
+        
+        self.handler = redis.Redis(connection_pool=pool)
+
+    def set_expiration_time(self, user_id: str, expiration_time: str):
+        """添加或更新用户数据有效期"""
+        self.handler.set(user_id, expiration_time)
+
+    def set_report(self, image_id: str, report: dict):
+        """添加图片报告数据"""
+        self.handler.hmset(image_id, report)
+
+    def get_user_expiration_time(self, user_id: str):
+        """获取用户的数据有效期"""
+        return self.handler.get(user_id)
+    
+    def get_report(self, image_id: str):
+        """获取报告"""
+        return self.handler.hgetall(image_id)
+    
+    def delete_user(self, user_id):
+        """删除用户"""
+        self.handler.delete(user_id)
 
 
 
