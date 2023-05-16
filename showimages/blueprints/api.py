@@ -10,3 +10,16 @@ from flask import Blueprint
 
 api_bp = Blueprint("api", __name__)
 
+
+@api_bp.before_request
+def update_session():
+    now = datetime.datetime.now()
+    user_id = session.get("USER_ID", "")
+    session['EXPIRATION_TIME'] = now + current_app.config["PERMANENT_SESSION_LIFETIME"]
+    
+    if not user_id:
+        user_id = generate_user_id(request)
+        session['USER_ID'] = user_id
+        init_user(user_id, current_app)
+
+    RedisHandler.set_expiration_time(user_id, session['EXPIRATION_TIME'])
