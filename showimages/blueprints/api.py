@@ -23,3 +23,20 @@ def update_session():
         init_user(user_id, current_app)
 
     RedisHandler.set_expiration_time(user_id, session['EXPIRATION_TIME'])
+
+
+@api_bp.route('/upload', methods=['GET', 'POST'])
+def upload_image():
+    """上传图片"""
+    form = UploadForm()
+    if form.validate_on_submit():
+        upload_path = get_user_path(session["USER_ID"])["user_upload_path"]
+
+        for file in request.files.getlist("photo"):
+            image_name = secure_filename(file.filename)
+            photos.save(file, os.path.join(upload_path, image_name))
+        success = True
+    else:
+        success = False
+
+    return "OK" if success else "FAIL"
