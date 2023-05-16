@@ -5,8 +5,16 @@
 
 import os
 
-from flask import Blueprint
+from flask import Blueprint, render_template, current_app
+
+from showimages.forms import UploadForm
 
 
-interface_bp = Blueprint("interface", __name__)
+interface_bp = Blueprint("interface", __name__, template_folder="templates")
 
+
+@interface_bp.route("/")
+def index():
+
+    form = UploadForm()
+    return render_template("index.html", form=form)

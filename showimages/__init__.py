@@ -15,7 +15,7 @@ basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 def create_app():
 
-    app = Flask("showimage")
+    app = Flask("showimages")
     app.config.from_object(Config)
 
     register_blueprints(app)

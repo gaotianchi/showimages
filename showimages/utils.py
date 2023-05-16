@@ -3,14 +3,11 @@
     :copyright: © 2023 高天驰 <6159984@gmail.com>
 """
 
-import datetime
 import hashlib
-import json
 import os
 import time
 
 from flask import Request, Flask
-from flask.sessions import SessionMixin
 
 
 def generate_user_id(request: Request):
@@ -28,8 +25,9 @@ def init_user(user_id: str, app: Flask):
     """初始化用户的文件夹结构"""
     user_data_path = os.path.join(app.config["USER_DATA_PATH"], user_id)
     user_upload_path = os.path.join(user_data_path, "uploads")
+    user_result_path = os.path.join(user_data_path, "results")
 
-    for i in (user_data_path, user_upload_path):
+    for i in (user_data_path, user_upload_path, user_result_path):
         os.makedirs(i)
 
 

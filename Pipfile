@@ -4,18 +4,14 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-flask = "*"
-python-dotenv = "*"
 pillow = "*"
-flask-dropzone = "*"
-wtforms = "*"
+redis = "*"
+flask = "*"
 flask-wtf = "*"
-requests = "*"
-apscheduler = "*"
 flask-uploads = "*"
+python-dotenv = "*"
 
 [dev-packages]
-watchdog = "*"
 
 [requires]
 python_version = "3.11"

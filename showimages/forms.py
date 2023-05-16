@@ -4,11 +4,11 @@
 """
 
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired, FileAllowed
-from wtforms import SubmitField
+from wtforms import MultipleFileField, SubmitField
+from wtforms.validators import DataRequired
 
 
 
 class UploadForm(FlaskForm):
-    photo = FileField(validators=[FileAllowed(), FileRequired()])
-    submit = SubmitField("上传")
+    photo = MultipleFileField('Upload Image', validators=[DataRequired()])
+    submit = SubmitField()
