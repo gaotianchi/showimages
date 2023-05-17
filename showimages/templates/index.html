@@ -5,13 +5,63 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
 </head>
 <body>
-    <form action="{{ url_for('api.upload_image') }}" method="post" enctype="multipart/form-data">
-        {{ form.csrf_token }} <br>
-        {{ form.photo.label }} <br>
-        {{ form.photo }} <br>
-        {{ form.submit }} <br>
-    </form>
+    <header>
+        <div id="logo-container">
+            <img id="logo" src="{{ url_for('static', filename='logo.jpg') }}" alt="logo" height="50px" width="50px">
+        </div>
+        <div id="title-container">
+            <span>Photonical</span>
+        </div>
+    </header>
+    <main>
+
+        <div id="page-title">
+            <h1>在线光伏故障检测平台</h1>
+            <h2>上传采集到的光伏板图片</h2>
+        </div>
+        <div id="form-container" style="display: none;">
+            <form action="{{ url_for('api.upload_image')}}" method="post" enctype="multipart/form-data">
+                {{ form.csrf_token }} <br>
+                {{ form.photo.label }} <br>
+                {{ form.photo }} <br>
+                {{ form.submit }} <br>
+            </form>
+        </div>
+
+        <div id="file-source-button-background">
+            <div id="file-source-button" class="btn">
+                <span>选择图片</span>
+            </div>
+        </div>
+
+        <div id="fileList" class="display-none">
+            <table>
+              <thead>
+                <tr>
+                  <th>图片</th>
+                  <th>图片信息</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+
+        <div id="file-source-more-button-background" class="display-none">
+            <div id="file-source-more-button-box">
+                <div id="more-file-source-button" class="btn">
+                    <span>添加更多图片</span>
+                </div>
+                <div id="upload-file" class="btn">
+                    <span>提交</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="{{ url_for('static', filename='index.js') }}"></script>
 </body>
 </html>

@@ -1,0 +1,179 @@
+/* Reset default margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #f1f1f1;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+}
+
+#page-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 30px;
+}
+
+header {
+    width: 100%;
+    height: 70px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#logo-container {
+    padding: 10px;
+}
+
+#logo {
+    height: 50px;
+    width: 50px;
+}
+
+#title-container {
+    margin-left: 10px;
+}
+
+#form-container {
+    margin-top: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    margin-bottom: 10px;
+}
+
+#file-source-button-background {
+    width: 100%;
+    height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #3c3c3c;
+    background-size: 24px 24px;
+    background-image: linear-gradient(45deg, rgba(0, 0, 0, .06) 25%, transparent 0), linear-gradient(-45deg, rgba(0, 0, 0, .06) 25%, transparent 0), linear-gradient(45deg, transparent 75%, rgba(0, 0, 0, .06) 0), linear-gradient(-45deg, transparent 75%, rgba(0, 0, 0, .06) 0);
+    background-position: 0 0, 0 12px, 12px -12px, -12px 0;
+}
+
+#file-source-button {
+    height: 30%;
+    width: 40%;
+    background-color: #f33;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    box-shadow: 2px 8px 17px 0 rgba(76, 76, 76, .06), 2px 12px 19px 0 rgba(0, 0, 0, .05), 2px 7px 9px 0 rgba(0, 0, 0, .04), 2px 6px 9px 13px rgba(252, 22, 0, .02);
+    justify-content: center;
+}
+
+/* Additional styling */
+input[type="file"] {
+    margin-top: 10px;
+}
+
+input[type="submit"] {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #555;
+}
+
+span {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+
+#file-source-more-button-background {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #3c3c3c;
+    background-size: 24px 24px;
+    background-image: linear-gradient(45deg, rgba(0, 0, 0, .06) 25%, transparent 0), linear-gradient(-45deg, rgba(0, 0, 0, .06) 25%, transparent 0), linear-gradient(45deg, transparent 75%, rgba(0, 0, 0, .06) 0), linear-gradient(-45deg, transparent 75%, rgba(0, 0, 0, .06) 0);
+    background-position: 0 0, 0 12px, 12px -12px, -12px 0;
+}
+
+#file-source-more-button-box {
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+}
+
+#more-file-source-button,
+#upload-file {
+    height: 80%;
+    width: 20%;
+    background-color: #f33;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    box-shadow: 2px 8px 17px 0 rgba(76, 76, 76, .06), 2px 12px 19px 0 rgba(0, 0, 0, .05), 2px 7px 9px 0 rgba(0, 0, 0, .04), 2px 6px 9px 13px rgba(252, 22, 0, .02);
+    justify-content: center;
+}
+
+
+#fileList {
+    width: 60%;
+    margin: 0 auto;
+    height: 400px;
+    overflow-y: auto;
+}
+
+table {
+    width: 100%;
+}
+
+th,
+td {
+    height: 50px;
+    padding: 5px;
+}
+
+td:first-child {
+    width: 50px;
+}
+
+td:first-child img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+td:last-child {
+    width: 50px;
+}
+
+td:last-child button {
+    width: 100%;
+    height: 100%;
+}
+
+.display-none {
+    display: none;
+}
