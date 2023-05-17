@@ -11,7 +11,13 @@ from PIL import Image
 import redis
 
 
-class RedisHandler:
+class Handler:
+
+    def __init__(self) -> None:
+        pass
+
+
+class RedisHandler(Handler):
     """Redis数据库操作句柄"""
 
     def __init__(self, host="localhost", port=6379) -> None:
@@ -40,7 +46,7 @@ class RedisHandler:
         self.handler.delete(user_id)
 
 
-class ImageHandler:
+class ImageHandler(Handler):
 
     def set_image_path(self, image_path):
         self.path = image_path
@@ -86,14 +92,16 @@ class ImageHandler:
             return None
         
 
-class ImageProcessor:
+class ImageProcessor(Handler):
 
     image_handler = ImageHandler()
     redis_handler = RedisHandler()
+    
 
     def __init__(self, upload_path, result_path) -> None:
         self.upload_path = upload_path
         self.result_path = result_path
+        self.error_handler = ModelErrorHandler(self)
 
     def process(self):
         image_names = os.listdir(self.upload_path)
@@ -103,7 +111,7 @@ class ImageProcessor:
             try:
                 self._process_image(image_path)
             except:
-                print(f"无法处理图片：{image_name}")
+                self.error_handler.set_error_item(dict(image_name=image_name))
 
     def _process_image(self, image_path):
 
@@ -127,36 +135,35 @@ class ImageProcessor:
         general_2 = random.randint(1, 10)
         
         # 特征信息
-        feature_1 = random.randint(1, 10)
-        feature_2 = random.randint(1, 10)
+        feature_1 = random.randint(0, 1)
+        feature_2 = random.randint(0, 1)
 
         # 将报告以字典的形式储存在 redis 缓存中
         report = dict(general_1=general_1, general_2=general_2, feature_1=feature_1, feature_2=feature_2)
-        self.redis_handler.set_report(image_id=image_info["image_hash"], report=report)
+        try:
+            self.redis_handler.set_report(image_id=image_info["image_hash"], report=report)
+        except:
+            self.error_handler.set_error_item(dict(report=report))
 
         try:
             with open(new_image_path, "wb") as image:
                 image.write(new_image_data)
         except IOError:
-            print(f"保存文件失败：{new_image_name}")
+            self.error_handler.set_error_item(dict(new_image_path=new_image_path))
+
+
+class ModelErrorHandler:
+
+    def __init__(self, handler: Handler) -> None:
+        self.handler = handler
+        self.error_num = 0
+        self.error_items = []
+
+    def set_error_item(self, item: dict):
+        self.error_num += 1
+        self.error_items.append(item)
+        
 
         
 if __name__ == "__main__":
-    basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-    
-    upload_path = os.path.join(basedir, "test1")
-    result_path = os.path.join(basedir, "test2")
-
-    processor = ImageProcessor(upload_path, result_path)
-    processor.redis_handler.handler.flushall()
-    a = processor.redis_handler.get_user_expiration_time(user_id="u")
-    
-    # handler = RedisHandler()
-    # handler.set_expiration_time(user_id="u", expiration_time="2023")
-    # a = handler.get_user_expiration_time(user_id="u")
-    # image_id = 'b7538f22fac4bea62000ade176e35b2c72538cdfb4bdf8d07760138477bd190c'
-    # report = {'general_1': 6, 'general_2': 1, 'feature_1': 1, 'feature_2': 1}
-    # handler.set_report(image_id=image_id, report=report)
-    # b = handler.get_report(image_id)
-    print(a)
-    # print(b)
+    pass

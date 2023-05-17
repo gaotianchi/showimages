@@ -6,10 +6,10 @@
 import datetime
 import os
 
-from flask import Blueprint, request, current_app, session
+from flask import Blueprint, redirect, request, current_app, session, url_for
 
 from showimages.forms import UploadForm
-from showimages.models import RedisHandler
+from showimages.models import RedisHandler, ImageProcessor, ModelErrorHandler
 from showimages.utils import generate_user_id, get_user_path, init_user
 
 
@@ -58,5 +58,6 @@ def process_image():
     result_path = get_user_path(user_id, current_app)["user_result_path"]
     handler = ImageProcessor(upload_path, result_path)
     handler.process()
-
-    return "OK"
+    result = dict(num=handler.error_handler.error_num, items=handler.error_handler.error_items)
+    
+    return "OK" if result["num"] == 0 else result
