@@ -76,12 +76,16 @@ def get_page_urls():
     page_images = image_names[start:end]
     num_pages = math.ceil(len(image_names) / per_page)
 
-    page_urls = []
+    image_items = []
     for image in page_images:
+        image_hash = image.split(".")[0]
+        report = redishandler.get_report(image_hash)
+        image_report = {key.decode(): value.decode() for key, value in report.items()}
         image_url = url_for("api.send_image_from_dir", filename=image)
-        page_urls.append(image_url)
+        image_item = dict(image_url=image_url, image_report=image_report)
+        image_items.append(image_item)
 
-    return jsonify(num_pages=num_pages, page_urls=page_urls)
+    return jsonify(num_pages=num_pages, image_items=image_items)
 
 
 @api_bp.route("/image-url/<filename>")
@@ -91,14 +95,4 @@ def send_image_from_dir(filename):
 
     return send_from_directory(result_path, filename)
 
-
-@api_bp.route("/image-report/<imagename>")
-def get_image_report(imagename: str):
-    image_hash = imagename.split(".")[0]
-    report = redishandler.get_report(image_hash)
-    report = {key.decode(): value.decode() for key, value in report.items()}
-    result = {f"{image_hash}": report}
-
-
-    return jsonify(result)
     
