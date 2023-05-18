@@ -55,10 +55,10 @@
         <div id="right">
             <div id="right-container">
                 <div id="feature-nav">
-                    <div class="btn" class="feature">
+                    <div class="btn active" data-feature="feature_1">
                         <span>feature_1</span>
                     </div>
-                    <div class="btn" class="feature">
+                    <div class="btn" data-feature="feature_2">
                         <span>feature_2</span>
                     </div>
                 </div>
@@ -77,8 +77,13 @@
 
                 <div id="page-nav">
 
-                    {% for i in range(num_pages + 1) %}
-                    <div class="btn">
+                    {% for i in range(1, num_pages+1) %}
+                    {% if i == 1 %}
+                    {% set cl = "btn active" %}
+                    {% else %}
+                    {% set cl = "btn" %}
+                    {% endif %}
+                    <div class="{{ cl }}" data-page="{{ i }}">
                         <span>{{ i }}</span>
                     </div>
                     {% endfor %}

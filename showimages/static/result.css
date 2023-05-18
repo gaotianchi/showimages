@@ -47,36 +47,7 @@ main {
     margin-top: 50px;
 }
 
-#feature-nav div {
-    padding: 10px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 10px;
-    background-color: #f33;
-    border-radius: 4px;
-}
 
-.btn {
-    display: inline-block;
-    padding: 10px 20px;
-    border: none;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.btn:hover {
-    background-color: #0056b3;
-}
-
-#this-one,
-#all {
-    margin-top: 20px;
-}
 
 #left {
     width: 50%;
@@ -117,31 +88,11 @@ main {
     flex-direction: column;
 }
 
-#feature-nav {
-    display: flex;
-    align-items: center;
-}
 
-#page-nav {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-#page-nav div {
-    padding: 10px 15px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-#page-nav div span {
-    font-size: 16px;
-}
 
 #small-images-container {
     display: grid;
+    cursor: pointer;
     grid-template-columns: repeat(3, 1fr);
     grid-auto-rows: minmax(100px, auto);
     gap: 10px;
@@ -156,4 +107,50 @@ main {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+#this-one,
+#all {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 20px;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 1px solid #ccc;
+}
+
+#feature-nav {
+    display: flex;
+    align-items: center;
+}
+
+#feature-nav div {
+    padding: 10px;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#page-nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+#page-nav div {
+    cursor: pointer;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.active {
+    background-color: #8ddb17;
 }
