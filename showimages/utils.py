@@ -4,6 +4,7 @@
 """
 
 import hashlib
+import math
 import os
 import time
 
@@ -39,3 +40,12 @@ def get_user_path(user_id: str, app: Flask) -> dict:
     user_result_path = os.path.join(user_data_path, "results")
 
     return dict(user_data_path=user_data_path, user_upload_path=user_upload_path, user_result_path=user_result_path)
+
+
+def paging(image_names, page=1, per_page=9):
+    num_pages = math.ceil(len(image_names) / per_page)
+    start = (page - 1) * per_page
+    end = start + per_page
+    page_images = image_names[start:end]
+    
+    return page_images, num_pages

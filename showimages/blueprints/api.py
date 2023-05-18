@@ -11,7 +11,7 @@ from flask import Blueprint, redirect, request, current_app, session, url_for, s
 
 from showimages.forms import UploadForm
 from showimages.models import RedisHandler, ImageProcessor, ModelErrorHandler
-from showimages.utils import generate_user_id, get_user_path, init_user
+from showimages.utils import generate_user_id, get_user_path, init_user, paging
 
 
 api_bp = Blueprint("api", __name__)
@@ -71,10 +71,8 @@ def get_page_urls():
     user_id = session.get("USER_ID", "")
     result_path = get_user_path(user_id, current_app)["user_result_path"]
     image_names = os.listdir(result_path)
-    start = (current_page - 1) * per_page
-    end = start + per_page
-    page_images = image_names[start:end]
-    num_pages = math.ceil(len(image_names) / per_page)
+
+    page_images, num_pages = paging(image_names, current_page, per_page)
 
     image_items = []
     for image in page_images:
