@@ -89,4 +89,16 @@ def send_image_from_dir(filename):
     user_id = session.get("USER_ID", "")
     result_path = get_user_path(user_id, current_app)["user_result_path"]
 
-    return send_from_directory(result_path, filename)    
+    return send_from_directory(result_path, filename)
+
+
+@api_bp.route("/image-report/<imagename>")
+def get_image_report(imagename: str):
+    image_hash = imagename.split(".")[0]
+    report = redishandler.get_report(image_hash)
+    report = {key.decode(): value.decode() for key, value in report.items()}
+    result = {f"{image_hash}": report}
+
+
+    return jsonify(result)
+    
