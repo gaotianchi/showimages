@@ -49,3 +49,16 @@ def paging(image_names, page=1, per_page=9):
     page_images = image_names[start:end]
     
     return page_images, num_pages
+
+
+def get_feature_images(user_id, feature, app, redishander):
+    user_result_path = get_user_path(user_id, app)["user_result_path"]
+    total_images = os.listdir(user_result_path)
+    feature_images = []
+    for image_name in total_images:
+        report = redishander.get_report(image_name.split(".")[0])
+        report_s = {key.decode(): value.decode() for key, value in report.items()}
+        if int(report_s[feature]):
+            feature_images.append(image_name)
+
+    return feature_images

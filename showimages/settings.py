@@ -17,13 +17,13 @@ class Config:
 
     SECRET_KEY = os.getenv("SECRET_KEY", "default")
 
-    PERMANENT_SESSION_LIFETIME = datetime.timedelta(seconds=60)
+    PERMANENT_SESSION_LIFETIME = datetime.timedelta(hours=12)
 
     USER_DATA_PATH = os.path.join(basedir, "userdata")
     
     ALLOWED_IMAGE_EXTENSIONS = ["png"]
 
-    IMAGE_PER_PAGE = 12
+    IMAGE_PER_PAGE = 9
 
     def __init__(self) -> None:
         if not os.path.exists(self.USER_DATA_PATH):
