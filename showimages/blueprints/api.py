@@ -4,9 +4,10 @@
 """
 
 import datetime
+import math
 import os
 
-from flask import Blueprint, redirect, request, current_app, session, url_for
+from flask import Blueprint, redirect, request, current_app, session, url_for, send_from_directory, jsonify
 
 from showimages.forms import UploadForm
 from showimages.models import RedisHandler, ImageProcessor, ModelErrorHandler
@@ -61,3 +62,31 @@ def process_image():
     result = dict(num=handler.error_handler.error_num, items=handler.error_handler.error_items)
     
     return "OK" if result["num"] == 0 else result
+
+
+@api_bp.route("/page-urls")
+def get_page_urls():
+    per_page = current_app.config["IMAGE_PER_PAGE"]
+    current_page = request.args.get("page", 1, int)
+    user_id = session.get("USER_ID", "")
+    result_path = get_user_path(user_id, current_app)["user_result_path"]
+    image_names = os.listdir(result_path)
+    start = (current_page - 1) * per_page
+    end = start + per_page
+    page_images = image_names[start:end]
+    num_pages = math.ceil(len(image_names) / per_page)
+
+    page_urls = []
+    for image in page_images:
+        image_url = url_for("api.send_image_from_dir", filename=image)
+        page_urls.append(image_url)
+
+    return jsonify(num_pages=num_pages, page_urls=page_urls)
+
+
+@api_bp.route("/image-url/<filename>")
+def send_image_from_dir(filename):
+    user_id = session.get("USER_ID", "")
+    result_path = get_user_path(user_id, current_app)["user_result_path"]
+
+    return send_from_directory(result_path, filename)    
