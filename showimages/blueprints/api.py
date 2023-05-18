@@ -51,6 +51,16 @@ def upload_image():
     return redirect(url_for("api.process_image"))
 
 
+@api_bp.route("/get-report/<filename>")
+def get_report(filename: str):
+    image_id = filename.split(".")[0]
+    report = redishandler.get_report(image_id)
+    image_report = {key.decode(): value.decode() for key, value in report.items()}
+
+    return jsonify(image_report)
+
+
+
 @api_bp.route("/process")
 def process_image():
     user_id = session.get("USER_ID")
