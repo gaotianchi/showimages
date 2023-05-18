@@ -1,0 +1,159 @@
+/* Reset default margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #f1f1f1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    width: 100%;
+    height: 70px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#logo-container {
+    padding: 10px;
+}
+
+#logo {
+    height: 50px;
+    width: 50px;
+}
+
+span {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#page-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
+main {
+    display: flex;
+    margin-top: 50px;
+}
+
+#feature-nav div {
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    background-color: #f33;
+    border-radius: 4px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+#this-one,
+#all {
+    margin-top: 20px;
+}
+
+#left {
+    width: 50%;
+    background-color: #fff;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#message-container {
+    flex: 20%;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+}
+
+#big-image-container {
+    flex: 80%;
+    display: flex;
+}
+
+
+#big-image {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+
+#right {
+    width: 50%;
+    background-color: #f9f9f9;
+    box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#feature-nav {
+    display: flex;
+    align-items: center;
+}
+
+#page-nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+#page-nav div {
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#page-nav div span {
+    font-size: 16px;
+}
+
+#small-images-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: minmax(100px, auto);
+    gap: 10px;
+}
+
+.small-image-container {
+    position: relative;
+}
+
+.small-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

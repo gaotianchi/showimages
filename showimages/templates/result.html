@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='result.css') }}">
+</head>
+
+<body>
+    <header>
+        <div id="logo-container">
+            <img id="logo" src="{{ url_for('static', filename='logo.jpg') }}" alt="logo" height="50px" width="50px">
+        </div>
+        <div id="title-container">
+            <span>Photonical</span>
+        </div>
+    </header>
+    <div id="page-title">
+        <h1>在线光伏故障检测平台</h1>
+        <h2>查看并下载分析结果</h2>
+    </div>
+    <main>
+        <div id="left">
+            <div id="left-container">
+                <div id="message-container">
+                    <div>
+                        <span>general_1: </span>
+                        <span>4</span>
+                    </div>
+                    <div>
+                        <span>general_2: </span>
+                        <span>5</span>
+                    </div>
+                    <div>
+                        <span>feature_1: </span>
+                        <span>1</span>
+                    </div>
+                    <div>
+                        <span>feature_2: </span>
+                        <span>0</span>
+                    </div>
+                </div>
+                <div id="big-image-container">
+                    <img id="big-image" src="logo.jpg" alt="大图">
+                </div>
+                <div id="download-btn-container">
+                    <div class="btn" id="this-one">
+                        <span>下载当前的图片和报告</span>
+                    </div>
+                    <div class="btn" id="all">
+                        <span>下载所有图片和报告</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="right">
+            <div id="right-container">
+                <div id="feature-nav">
+                    <div class="btn" class="feature">
+                        <span>feature_1</span>
+                    </div>
+                    <div class="btn" class="feature">
+                        <span>feature_2</span>
+                    </div>
+                </div>
+
+                <div id="small-images-container">
+                    <div class="small-image-container">
+                        <img class="small-image" src="{{ url_for('static', filename='logo.jpg') }}" alt="小图">
+                    </div>
+                    <div class="small-image-container">
+                        <img class="small-image" src="./1200px-George_Gordon_Byron,_6th_Baron_Byron_by_Richard_Westall_(2).jpg" alt="小图">
+                    </div>
+                    <div class="small-image-container">
+                        <img class="small-image" src="logo.jpg" alt="小图">
+                    </div>
+                    <div class="small-image-container">
+                        <img class="small-image" src="页面 2.png" alt="小图">
+                    </div>
+                    <div class="small-image-container">
+                        <img class="small-image" src="logo.jpg" alt="小图">
+                    </div>
+                    <div class="small-image-container">
+                        <img class="small-image" src="logo.jpg" alt="小图">
+                    </div>
+                    <div class="small-image-container">
+                        <img class="small-image" src="logo.jpg" alt="小图">
+                    </div>
+                    <div class="small-image-container">
+                        <img class="small-image" src="logo.jpg" alt="小图">
+                    </div>
+                    <div class="small-image-container">
+                        <img class="small-image" src="logo.jpg" alt="小图">
+                    </div>
+
+                </div>
+
+                <div id="page-nav">
+                    <div class="btn">
+                        <span>1</span>
+                    </div>
+                    <div class="btn">
+                        <span>2</span>
+                    </div>
+                    <div class="btn">
+                        <span>3</span>
+                    </div>
+                    <div class="btn">
+                        <span>4</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="{{ url_for('static', filename='result.js') }}"></script>
+</body>
+
+</html>

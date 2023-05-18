@@ -18,3 +18,9 @@ def index():
 
     form = UploadForm()
     return render_template("index.html", form=form)
+
+
+@interface_bp.route("/result")
+def result():
+
+    return render_template("result.html")
