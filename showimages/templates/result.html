@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
+    {% set num_pages = items["num_pages"] %}
+    {% set image_items = items["image_items"] %}
 
 <head>
     <meta charset="UTF-8">
@@ -26,25 +28,19 @@
         <div id="left">
             <div id="left-container">
                 <div id="message-container">
+                    {% set first_report = image_items[0]["image_report"] %}
+
+                    {% for key, value in first_report.items() %}
                     <div>
-                        <span>general_1: </span>
-                        <span>4</span>
+                        <span>{{ key }}: </span>
+                        <span>{{ value }}</span>
                     </div>
-                    <div>
-                        <span>general_2: </span>
-                        <span>5</span>
-                    </div>
-                    <div>
-                        <span>feature_1: </span>
-                        <span>1</span>
-                    </div>
-                    <div>
-                        <span>feature_2: </span>
-                        <span>0</span>
-                    </div>
+                    {% endfor %}
+
                 </div>
                 <div id="big-image-container">
-                    <img id="big-image" src="logo.jpg" alt="大图">
+                    {% set first_url = image_items[0]["image_url"] %}
+                    <img id="big-image" src="{{ first_url }}" alt="大图">
                 </div>
                 <div id="download-btn-container">
                     <div class="btn" id="this-one">
@@ -68,49 +64,25 @@
                 </div>
 
                 <div id="small-images-container">
+
+                    {% for image_item in image_items %}
+                    {% with image_url = image_item["image_url"] %}
                     <div class="small-image-container">
-                        <img class="small-image" src="{{ url_for('static', filename='logo.jpg') }}" alt="小图">
+                        <img class="small-image" src="{{ image_url }}" alt="小图">
                     </div>
-                    <div class="small-image-container">
-                        <img class="small-image" src="./1200px-George_Gordon_Byron,_6th_Baron_Byron_by_Richard_Westall_(2).jpg" alt="小图">
-                    </div>
-                    <div class="small-image-container">
-                        <img class="small-image" src="logo.jpg" alt="小图">
-                    </div>
-                    <div class="small-image-container">
-                        <img class="small-image" src="页面 2.png" alt="小图">
-                    </div>
-                    <div class="small-image-container">
-                        <img class="small-image" src="logo.jpg" alt="小图">
-                    </div>
-                    <div class="small-image-container">
-                        <img class="small-image" src="logo.jpg" alt="小图">
-                    </div>
-                    <div class="small-image-container">
-                        <img class="small-image" src="logo.jpg" alt="小图">
-                    </div>
-                    <div class="small-image-container">
-                        <img class="small-image" src="logo.jpg" alt="小图">
-                    </div>
-                    <div class="small-image-container">
-                        <img class="small-image" src="logo.jpg" alt="小图">
-                    </div>
+                    {% endwith %}
+                    {% endfor %}
 
                 </div>
 
                 <div id="page-nav">
+
+                    {% for i in range(num_pages + 1) %}
                     <div class="btn">
-                        <span>1</span>
+                        <span>{{ i }}</span>
                     </div>
-                    <div class="btn">
-                        <span>2</span>
-                    </div>
-                    <div class="btn">
-                        <span>3</span>
-                    </div>
-                    <div class="btn">
-                        <span>4</span>
-                    </div>
+                    {% endfor %}
+
                 </div>
             </div>
         </div>

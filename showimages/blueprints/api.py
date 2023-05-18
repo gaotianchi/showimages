@@ -4,13 +4,12 @@
 """
 
 import datetime
-import math
 import os
 
 from flask import Blueprint, redirect, request, current_app, session, url_for, send_from_directory, jsonify
 
 from showimages.forms import UploadForm
-from showimages.models import RedisHandler, ImageProcessor, ModelErrorHandler
+from showimages.models import RedisHandler, ImageProcessor
 from showimages.utils import generate_user_id, get_feature_images, get_user_path, init_user, paging
 
 
