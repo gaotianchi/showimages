@@ -1,42 +1,37 @@
-const bigImage = document.getElementById("big-image");
-const smallImgages = document.querySelectorAll(".small-image");
+const reportContainer = document.getElementById("message-container");
+const smallImageContainer = document.getElementById("small-images-container");
+const navContainer = document.getElementById("page-nav");
+const bigImageContainer = document.getElementById("big-image-container");
 
 
 
-smallImgages.forEach(
-    (smallImage) => {
-        smallImage.addEventListener("click",
-            () => {
-                let smallImageUrl = smallImage.src;
-                bigImage.src = smallImageUrl;
-            });
-    }
-);
+function getFeature() {
+    let feature = document.querySelector("#feature-nav div.btn.active span").textContent;
 
-
-function createMessageContainer(json) {
-
-    const messageContainer = document.getElementById("message-container");
-
-    for (var key in json) {
-        if (json.hasOwnProperty(key)) {
-            var div = document.createElement("div");
-
-            var keySpan = document.createElement("span");
-            keySpan.textContent = key + ": ";
-            div.appendChild(keySpan);
-
-            var valueSpan = document.createElement("span");
-            valueSpan.textContent = json[key];
-            div.appendChild(valueSpan);
-
-            messageContainer.appendChild(div);
-        }
-    }
+    return feature
 }
 
 
-function getSmallImageItem(url) {
+async function getItems(feature, page) {
+    let url = `api/page-urls/${feature}?page=${page}`;
+    let response = await fetch(url);
+    let items = await response.json();
+    return items
+}
+
+
+async function getReportFromImageUrl(imageUrl) {
+    let imageName = imageUrl.split("/").pop();
+    let url = `api/get-report/${imageName}`;
+
+    let response = await fetch(url);
+    let items = await response.json();
+
+    return items
+}
+
+
+function createImageItem(url) {
     const smallImageItem = document.createElement("div");
     const smallImage = document.createElement("img");
 
@@ -51,19 +46,151 @@ function getSmallImageItem(url) {
 }
 
 
-function createNavItems(numPages) {
-    const pageNav = document.getElementById("page-nav");
+function renderReport(report) {
+    reportContainer.innerHTML = "";
 
-    for (let i = 0; i < numPages; i++) {
-        const navItem = document.createElement("div");
-        navItem.setAttribute("class", "btn");
+    for (const [key, value] of Object.entries(report)) {
+        const reportItemKey = document.createElement("span");
+        const reportItemValue = document.createElement("span");
 
-        const textItem = document.createElement("span");
-        textItem.textContent = i + 1;
+        reportItemKey.textContent = key + ": ";
+        reportItemValue.textContent = value;
 
-        navItem.appendChild(textItem);
+        const reportItem = document.createElement("div");
+        reportItem.appendChild(reportItemKey);
+        reportItem.appendChild(reportItemValue);
 
-        pageNav.appendChild(navItem)
+        reportContainer.appendChild(reportItem);
     }
+
 }
 
+
+function createNavItem(page) {
+    const newNavItemContainer = document.createElement("div");
+    const newNavItem = document.createElement("span");
+
+    if (page == 1) {
+        newNavItemContainer.setAttribute("class", "btn active");
+    } else {
+        newNavItemContainer.setAttribute("class", "btn");
+    }
+
+    newNavItemContainer.setAttribute("data-page", page);
+
+    newNavItem.textContent = page;
+    newNavItemContainer.appendChild(newNavItem);
+
+    return newNavItemContainer
+}
+
+
+async function smallImageEventRegister(smallImageNode) {
+    smallImageNode.addEventListener(
+        "click",
+        async () => {
+            let imageUrl = smallImageNode.querySelector("img").src;
+            let bigImage = bigImageContainer.querySelector("img");
+            bigImage.src = imageUrl;
+            let report = await getReportFromImageUrl(imageUrl);
+            renderReport(report);
+        }
+    );
+}
+
+
+function updateNavActive(currentNavItem) {
+    const navElements = document.querySelectorAll("#page-nav div");
+    navElements.forEach(
+        (navElement) => {
+            navElement.setAttribute("class", "btn");
+        }
+    );
+    currentNavItem.setAttribute("class", "btn active");
+}
+
+function updateFeatureActive(currentFeatureItem) {
+    let featureItems = document.querySelectorAll("#feature-nav div");
+    featureItems.forEach(
+        (featureItem) => {
+            featureItem.setAttribute("class", "btn");
+        }
+    );
+    currentFeatureItem.setAttribute("class", "btn active");
+}
+
+
+function initFeatureEvent() {
+    let featureItems = document.querySelectorAll("#feature-nav div");
+    featureItems.forEach(
+        (featureItem) => {
+            featureItem.addEventListener(
+                "click",
+                async () => {
+                    smallImageContainer.innerHTML = "";
+                    updateFeatureActive(featureItem);
+                    let feature = featureItem.querySelector("span").textContent;
+                    let items = await getItems(feature, page=1);
+                    let imageItems = items.image_items;
+                    
+                    for (let i = 0; i < imageItems.length; i++) {
+                        let imageUrl = imageItems[i]["image_url"];
+                        let newImageNode = createImageItem(imageUrl);
+                        await smallImageEventRegister(newImageNode);
+                        smallImageContainer.appendChild(newImageNode);
+                    }
+                }
+            );
+        }
+    );
+}
+
+
+
+function initSmallImageEvent() {
+    let smallImageItems = document.querySelectorAll(".small-image-container");
+    smallImageItems.forEach(
+        async (smallImageItem) => {
+            await smallImageEventRegister(smallImageItem);
+        }
+    );
+}
+
+
+function navEventRegister(navItem) {
+    navItem.addEventListener(
+        "click",
+        async () => {
+            updateNavActive(navItem);
+            
+            let feature = getFeature();
+            let page = navItem.querySelector("span").textContent;
+            let items = await getItems(feature, page);
+            let imageItems = items.image_items;
+            smallImageContainer.innerHTML = "";
+            for (let i = 0; i < imageItems.length; i++) {
+                let imageUrl = imageItems[i]["image_url"];
+                let newImageNode = createImageItem(imageUrl);
+                await smallImageEventRegister(newImageNode);
+                smallImageContainer.appendChild(newImageNode);
+            }
+        }
+    );
+}
+
+
+function initNavEvent() {
+    let navItems = document.querySelectorAll("#page-nav div");
+    navItems.forEach(
+        (navItem) => {
+            navEventRegister(navItem);
+        }
+    );
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    initSmallImageEvent();
+    initNavEvent();
+    initFeatureEvent();
+});
