@@ -85,6 +85,16 @@ function createNavItem(page) {
 }
 
 
+function renderNavItems(numPages) {
+    navContainer.innerHTML = "";
+    for (let i = 1; i <= numPages; i++) {
+        let newNavItem = createNavItem(i);
+        navEventRegister(newNavItem);
+        navContainer.appendChild(newNavItem);
+    }
+}
+
+
 async function smallImageEventRegister(smallImageNode) {
     smallImageNode.addEventListener(
         "click",
@@ -132,6 +142,8 @@ function initFeatureEvent() {
                     let feature = featureItem.querySelector("span").textContent;
                     let items = await getItems(feature, page=1);
                     let imageItems = items.image_items;
+                    let numPages = items.num_pages;
+                    renderNavItems(numPages);
                     
                     for (let i = 0; i < imageItems.length; i++) {
                         let imageUrl = imageItems[i]["image_url"];
