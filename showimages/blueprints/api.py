@@ -44,6 +44,7 @@ def upload_image():
         for file in request.files.getlist("photo"):
             image_name = file.filename
             file.save(os.path.join(upload_path, image_name))
+            redishandler.add_uploading(session.get("USER_ID"), image_name)
         success = True
     else:
         success = False
@@ -66,11 +67,10 @@ def process_image():
     user_id = session.get("USER_ID")
     upload_path = get_user_path(user_id, current_app)["user_upload_path"]
     result_path = get_user_path(user_id, current_app)["user_result_path"]
-    handler = ImageProcessor(upload_path, result_path)
+    handler = ImageProcessor(upload_path, result_path, user_id)
     handler.process()
-    result = dict(num=handler.error_handler.error_num, items=handler.error_handler.error_items)
     
-    return "OK" if result["num"] == 0 else result
+    return redirect(url_for("interface.result"))
 
 
 @api_bp.route("/page-urls")
@@ -101,3 +101,16 @@ def send_image_from_dir(filename):
     result_path = get_user_path(user_id, current_app)["user_result_path"]
 
     return send_from_directory(result_path, filename)
+
+
+@api_bp.route("/processed-images")
+def get_processed_images():
+    user_id = session.get("USER_ID")
+    result_path = get_user_path(user_id, current_app)["user_result_path"]
+    images = os.listdir(result_path)
+    image_urls = []
+    for image in images:
+        image_url = url_for("api.send_image_from_dir", filename=image)
+        image_urls.append(image_url)
+
+    return jsonify(image_urls)
