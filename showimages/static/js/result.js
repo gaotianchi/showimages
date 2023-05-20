@@ -1,3 +1,7 @@
+/* :author: 高天驰
+:copyright: © 2023 高天驰 <6159984@gmail.com> */
+
+
 const reportContainer = document.getElementById("message-container");
 const smallImageContainer = document.getElementById("small-images-container");
 const navContainer = document.getElementById("page-nav");

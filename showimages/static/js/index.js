@@ -1,3 +1,7 @@
+/* :author: 高天驰
+:copyright: © 2023 高天驰 <6159984@gmail.com> */
+
+
 const fileSub = document.getElementById("fileSub");
 const fileSelect = document.getElementById("file-source-button");
 const btns = document.querySelectorAll(".btn");
