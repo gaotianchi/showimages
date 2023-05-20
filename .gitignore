@@ -105,7 +105,8 @@ venv.bak/
 
 # Development
 .vscode
-.trash.txt
-history
+.trash
+.history
 userdata
 test**
+Pipfile**
