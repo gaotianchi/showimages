@@ -19,11 +19,15 @@
     {% block header %}
 
     {% endblock header %}
-    <div id="flash-message">
-        {% for message in get_flashed_messages() %}
-        <div class="alert">{{ message }}</div>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+          <div class="flash-message">{{ message }}</div>
         {% endfor %}
-    </div>
+    {% endif %}
+  {% endwith %}
+  
     {% block main %}
 
     {% endblock main %}
@@ -31,7 +35,7 @@
     {% block script %}
 
     {% endblock script %}
-
+    <script src="{{ url_for('static', filename='js/base.js') }}"></script>
 </body>
 
 </html>

@@ -6,7 +6,8 @@
 import datetime
 import os
 
-from flask import Blueprint, redirect, request, current_app, session, url_for, send_from_directory, jsonify
+from flask import Blueprint, redirect, request, current_app, session, url_for, \
+send_from_directory, jsonify, flash
 
 from showimages.forms import UploadForm
 from showimages.models import RedisHandler, ImageProcessor
@@ -69,6 +70,12 @@ def process_image():
     result_path = get_user_path(user_id, current_app)["user_result_path"]
     handler = ImageProcessor(upload_path, result_path, user_id)
     handler.process()
+    fail_items = handler.redis_handler.get_fails(user_id)
+    if fail_items:
+        for fail_item in fail_items:
+            flash(f"处理失败：{fail_item}")
+    else:
+        flash("处理成功！")
     
     return redirect(url_for("interface.result"))
 

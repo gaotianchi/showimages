@@ -5,7 +5,6 @@ const bigImageContainer = document.getElementById("big-image-container");
 const processed = document.querySelector(".processed  > span:nth-child(2)");
 
 
-
 function getFeature() {
     let feature = document.querySelector("#feature-nav div.btn.active span").textContent;
 

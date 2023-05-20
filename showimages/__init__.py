@@ -9,6 +9,7 @@ from flask import Flask
 
 from showimages.settings import Config
 from showimages.blueprints import interface_bp, api_bp
+from showimages.extensions import csrf
 
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
@@ -19,6 +20,7 @@ def create_app():
     app.config.from_object(Config)
 
     register_blueprints(app)
+    register_extensions(app)
 
     return app
 
@@ -26,3 +28,7 @@ def create_app():
 def register_blueprints(app: Flask):
     app.register_blueprint(api_bp, url_prefix="/api")
     app.register_blueprint(interface_bp)
+
+
+def register_extensions(app: Flask):
+    csrf.init_app(app)

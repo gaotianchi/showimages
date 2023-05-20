@@ -17,11 +17,11 @@ class Config:
 
     SECRET_KEY = os.getenv("SECRET_KEY", "default")
 
-    PERMANENT_SESSION_LIFETIME = datetime.timedelta(hours=12)
+    PERMANENT_SESSION_LIFETIME = datetime.timedelta(hours=24)
 
     USER_DATA_PATH = os.path.join(basedir, "userdata")
     
-    ALLOWED_IMAGE_EXTENSIONS = ["png"]
+    # ALLOWED_IMAGE_EXTENSIONS = ["png"]
 
     IMAGE_PER_PAGE = 9
 

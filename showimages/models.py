@@ -49,6 +49,15 @@ class RedisHandler:
     
     def get_report(self, image_id: str):
         return self.handler.hgetall(f"images:{image_id}")
+    
+    def set_fails(self, user_id: str, image_name: str):
+
+        self.handler.rpush(f"{user_id}:fails", image_name)
+
+    def get_fails(self, user_id: str) -> list:
+        items = self.handler.lrange(f"{user_id}:fails", 0, -1)
+
+        return list(map(lambda x: x.decode(), items))
 
 
 
@@ -119,7 +128,7 @@ class ImageProcessor:
                 self.redis_handler.delete_left_uploading(self.user_id)
             except:
                 fail_item = self.redis_handler.delete_left_uploading(self.user_id)
-                print(f"Fail to process {fail_item}")
+                self.redis_handler.set_fails(self.user_id, fail_item)
 
     def _process_image(self, image_path):
 

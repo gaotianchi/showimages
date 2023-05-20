@@ -5,7 +5,7 @@
 from urllib.parse import urljoin
 
 import requests
-from flask import Blueprint, render_template, current_app, url_for, request
+from flask import Blueprint, render_template, url_for, request, session, flash
 
 from showimages.forms import UploadForm
 
@@ -17,6 +17,9 @@ interface_bp = Blueprint("interface", __name__, template_folder="templates")
 def index():
 
     form = UploadForm()
+    user_id = session.get("USER_ID", "")
+    if user_id:
+        flash(f"欢迎！{user_id}")
     return render_template("index.html", form=form)
 
 
