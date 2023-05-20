@@ -75,7 +75,7 @@ def process_image():
 
 @api_bp.route("/page-urls")
 @api_bp.route("/page-urls/<feature>")
-def get_page_urls(feature="feature_1"):
+def get_page_urls(feature="All"):
     per_page = current_app.config["IMAGE_PER_PAGE"]
     current_page = request.args.get("page", 1, int)
     user_id = session.get("USER_ID", "")

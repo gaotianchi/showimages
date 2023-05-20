@@ -34,6 +34,21 @@ span {
     font-weight: bold;
 }
 
+#status-container {
+    flex-basis: 70%;
+    padding: 10px;
+    right: 10px;
+}
+
+#status {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.processed {
+    margin: 20px;
+}
+
 #page-title {
     display: flex;
     flex-direction: column;

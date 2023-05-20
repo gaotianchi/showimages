@@ -2,6 +2,7 @@ const reportContainer = document.getElementById("message-container");
 const smallImageContainer = document.getElementById("small-images-container");
 const navContainer = document.getElementById("page-nav");
 const bigImageContainer = document.getElementById("big-image-container");
+const processed = document.querySelector(".processed  > span:nth-child(2)");
 
 
 
@@ -17,6 +18,21 @@ async function getItems(feature, page) {
     let response = await fetch(url);
     let items = await response.json();
     return items
+}
+
+async function getJsonItems(url) {
+    let response = await fetch(url);
+    let items = await response.json();
+    return items;
+}
+
+
+async function updateHadProcessedFileCount() {
+    let url = "api/processed-images"
+    let items = await getJsonItems(url);
+    let count = items.length;
+    processed.innerHTML = "";
+    processed.textContent = count;
 }
 
 
@@ -140,11 +156,11 @@ function initFeatureEvent() {
                     smallImageContainer.innerHTML = "";
                     updateFeatureActive(featureItem);
                     let feature = featureItem.querySelector("span").textContent;
-                    let items = await getItems(feature, page=1);
+                    let items = await getItems(feature, page = 1);
                     let imageItems = items.image_items;
                     let numPages = items.num_pages;
                     renderNavItems(numPages);
-                    
+
                     for (let i = 0; i < imageItems.length; i++) {
                         let imageUrl = imageItems[i]["image_url"];
                         let newImageNode = createImageItem(imageUrl);
@@ -174,7 +190,7 @@ function navEventRegister(navItem) {
         "click",
         async () => {
             updateNavActive(navItem);
-            
+
             let feature = getFeature();
             let page = navItem.querySelector("span").textContent;
             let items = await getItems(feature, page);
@@ -201,8 +217,10 @@ function initNavEvent() {
 }
 
 
-document.addEventListener("DOMContentLoaded", () => {
-    initSmallImageEvent();
-    initNavEvent();
-    initFeatureEvent();
-});
+document.addEventListener("DOMContentLoaded",
+    async () => {
+        initSmallImageEvent();
+        initNavEvent();
+        initFeatureEvent();
+        await updateHadProcessedFileCount();
+    });
