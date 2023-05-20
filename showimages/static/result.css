@@ -43,9 +43,11 @@ span {
 #status {
     display: flex;
     flex-direction: row-reverse;
+    align-items: center;
+    justify-content: right;
 }
 
-.processed {
+.processed, .upload {
     margin: 20px;
 }
 

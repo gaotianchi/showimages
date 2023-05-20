@@ -7,17 +7,29 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Result</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='result.css') }}">
 </head>
 
 <body>
     <header>
         <div id="logo-container">
-            <img id="logo" src="{{ url_for('static', filename='logo.jpg') }}" alt="logo" height="50px" width="50px">
+            <a href="{{ url_for('interface.index') }}"><img id="logo" src="{{ url_for('static', filename='logo.jpg') }}" alt="logo" height="50px" width="50px"></a>
         </div>
         <div id="title-container">
             <span>Photonical</span>
+        </div>
+        <div id="status-container">
+            <div id="status">
+                <div class="upload">
+                    <a href="{{ url_for('interface.index') }}"><span>添加更多图片</span></a>
+                </div>
+                <div class="processed">
+                    <span>累计处理</span>
+                    <span>0</span>
+                    <span>个图片</span>
+                </div>
+            </div>
         </div>
     </header>
     <div id="page-title">
@@ -55,7 +67,10 @@
         <div id="right">
             <div id="right-container">
                 <div id="feature-nav">
-                    <div class="btn active" data-feature="feature_1">
+                    <div class="btn active">
+                        <span>All</span>
+                    </div>
+                    <div class="btn" data-feature="feature_1">
                         <span>feature_1</span>
                     </div>
                     <div class="btn" data-feature="feature_2">
