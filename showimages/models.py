@@ -17,7 +17,7 @@ class Handler:
         pass
 
 
-class RedisHandler(Handler):
+class RedisHandler:
     """Redis数据库操作句柄"""
 
     def __init__(self, host="localhost", port=6379) -> None:
@@ -26,27 +26,33 @@ class RedisHandler(Handler):
         self.handler = redis.Redis(connection_pool=pool, decode_responses=True)
 
     def set_expiration_time(self, user_id: str, expiration_time: str):
-        """添加或更新用户数据有效期"""
-        self.handler.set(user_id, expiration_time)
-
-    def set_report(self, image_id: str, report: dict):
-        """添加图片报告数据"""
-        self.handler.hset(image_id, mapping=report)
+        self.handler.set(f"{user_id}:expiration_time", expiration_time)
 
     def get_user_expiration_time(self, user_id: str):
-        """获取用户的数据有效期"""
-        return self.handler.get(user_id)
+        return self.handler.get(f"{user_id}:expiration_time")
+    
+    def add_uploading(self, user_id: str, image_name: str):
+        self.handler.rpush(f"{user_id}:uploading", image_name)
+
+    def get_uploading(self, user_id: str) -> list:
+
+        items = self.handler.lrange(f"{user_id}:uploading", 0, -1)
+
+        return list(map(lambda x: x.decode(), items))
+    
+    def delete_left_uploading(self, user_id: str) -> str:
+
+        return self.handler.lpop(f"{user_id}:uploading").decode()
+
+    def set_report(self, image_id: str, report: dict):
+        self.handler.hset(f"images:{image_id}", mapping=report)
     
     def get_report(self, image_id: str):
-        """获取报告"""
-        return self.handler.hgetall(image_id)
-    
-    def delete_user(self, user_id):
-        """删除用户"""
-        self.handler.delete(user_id)
+        return self.handler.hgetall(f"images:{image_id}")
 
 
-class ImageHandler(Handler):
+
+class ImageHandler:
 
     def set_image_path(self, image_path):
         self.path = image_path
@@ -92,26 +98,28 @@ class ImageHandler(Handler):
             return None
         
 
-class ImageProcessor(Handler):
+class ImageProcessor:
 
     image_handler = ImageHandler()
     redis_handler = RedisHandler()
     
 
-    def __init__(self, upload_path, result_path) -> None:
+    def __init__(self, upload_path, result_path, user_id) -> None:
         self.upload_path = upload_path
         self.result_path = result_path
-        self.error_handler = ModelErrorHandler(self)
+        self.user_id = user_id
 
     def process(self):
-        image_names = os.listdir(self.upload_path)
+        image_names = self.redis_handler.get_uploading(self.user_id)
         for image_name in image_names:
             image_path = os.path.join(self.upload_path, image_name)
 
             try:
                 self._process_image(image_path)
+                self.redis_handler.delete_left_uploading(self.user_id)
             except:
-                self.error_handler.set_error_item(dict(image_name=image_name))
+                fail_item = self.redis_handler.delete_left_uploading(self.user_id)
+                print(f"Fail to process {fail_item}")
 
     def _process_image(self, image_path):
 
@@ -143,27 +151,15 @@ class ImageProcessor(Handler):
         try:
             self.redis_handler.set_report(image_id=image_info["image_hash"], report=report)
         except:
-            self.error_handler.set_error_item(dict(report=report))
+            print("Fail")
 
         try:
             with open(new_image_path, "wb") as image:
                 image.write(new_image_data)
         except IOError:
-            self.error_handler.set_error_item(dict(new_image_path=new_image_path))
+            print("Fail")
 
 
-class ModelErrorHandler:
 
-    def __init__(self, handler: Handler) -> None:
-        self.handler = handler
-        self.error_num = 0
-        self.error_items = []
-
-    def set_error_item(self, item: dict):
-        self.error_num += 1
-        self.error_items.append(item)
-        
-
-        
 if __name__ == "__main__":
     pass
