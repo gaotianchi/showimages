@@ -7,6 +7,55 @@ const smallImageContainer = document.getElementById("small-images-container");
 const navContainer = document.getElementById("page-nav");
 const bigImageContainer = document.getElementById("big-image-container");
 const processed = document.querySelector(".processed  > span:nth-child(2)");
+const deleteThisOneBtn = document.getElementById("delete-this-one");
+const deleteAllBtn = document.getElementById("delete-all");
+const bigImage = document.getElementById("big-image");
+
+
+function findSmallImageContainerNode(bigImageSrc) {
+    const smallImageContainers = document.querySelectorAll(".small-image-container");
+    for (let i = 0; i < smallImageContainers.length; i++) {
+        let smallImageContainer = smallImageContainers[i];
+        let smallImageNode = smallImageContainer.querySelector("img");
+        if (smallImageNode.src == bigImageSrc) {
+            const targetNode = smallImageContainer;
+            if (i < smallImageContainers.length - 1) {
+                let nextNode = smallImageContainers[i + 1];
+                let nextNodeSrc = nextNode.querySelector("img").src;
+                return {
+                    "targetNode": targetNode,
+                    "nextNodeSrc": nextNodeSrc
+                }
+            }
+            else if (i == smallImageContainers.length - 1 & smallImageContainers.length > 1) {
+                let nextNode = smallImageContainers[i - 1];
+                let nextNodeSrc = nextNode.querySelector("img").src;                return {
+                    "targetNode": targetNode,
+                    "nextNodeSrc": nextNodeSrc
+                }
+            }
+            else {
+                let nextNodeSrc = "/static/delete-warning.png";
+                return {
+                    "targetNode": targetNode,
+                    "nextNodeSrc": nextNodeSrc
+                }
+            }
+        }
+    }
+
+}
+
+
+deleteThisOneBtn.addEventListener(
+    "click",
+    () => {
+        let bigImageSrc = bigImage.src;
+        let items = findSmallImageContainerNode(bigImageSrc);
+        bigImage.src = items.nextNodeSrc;
+        items.targetNode.parentElement.removeChild(items.targetNode);
+    }
+)
 
 
 function getFeature() {
