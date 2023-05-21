@@ -56,8 +56,7 @@ def upload_image():
 @api_bp.route("/get-report/<filename>")
 def get_report(filename: str):
     image_id = filename.split(".")[0]
-    report = redishandler.get_report(image_id)
-    image_report = {key.decode(): value.decode() for key, value in report.items()}
+    image_report = redishandler.get_report(image_id)
 
     return jsonify(image_report)
 
@@ -93,8 +92,7 @@ def get_page_urls(feature="All"):
     image_items = []
     for image in page_images:
         image_hash = image.split(".")[0]
-        report = redishandler.get_report(image_hash)
-        image_report = {key.decode(): value.decode() for key, value in report.items()}
+        image_report = redishandler.get_report(image_hash)
         image_url = url_for("api.send_image_from_dir", filename=image)
         image_item = dict(image_url=image_url, image_report=image_report)
         image_items.append(image_item)
@@ -121,3 +119,20 @@ def get_processed_images():
         image_urls.append(image_url)
 
     return jsonify(image_urls)
+
+
+@api_bp.route("/delete-this-one/<image_name>", methods=['GET', 'POST'])
+def delete_this_one(image_name: str):
+    user_id = session.get("USER_ID")
+    result_path = get_user_path(user_id, current_app)["user_result_path"]
+    upload_path = get_user_path(user_id, current_app)["user_upload_path"]
+    image_id = image_name.split(".")[0]
+    report = redishandler.get_report(image_id)
+    upload_image_path = os.path.join(upload_path, report["original_name"])
+    result_image_path = os.path.join(result_path, image_name)
+    os.remove(upload_image_path)
+    os.remove(result_image_path)
+    
+    redishandler.delete_report(image_id)
+    
+    return "ok"

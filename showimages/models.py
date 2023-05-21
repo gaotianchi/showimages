@@ -47,8 +47,13 @@ class RedisHandler:
     def set_report(self, image_id: str, report: dict):
         self.handler.hset(f"images:{image_id}", mapping=report)
     
-    def get_report(self, image_id: str):
-        return self.handler.hgetall(f"images:{image_id}")
+    def get_report(self, image_id: str) -> dict:
+        report = self.handler.hgetall(f"images:{image_id}")
+        return {key.decode(): value.decode() for key, value in report.items()}
+    
+    def delete_report(self, image_id: str) -> None:
+
+        self.handler.delete(f"images:{image_id}")
     
     def set_fails(self, user_id: str, image_name: str):
 
@@ -144,6 +149,7 @@ class ImageProcessor:
         # 处理过后的图片数据
         new_image_data = image_data
         new_image_name = image_info["image_name"]
+        original_name = image_info["original_name"]
         new_image_path = os.path.join(self.result_path, new_image_name)
 
         # 处理的结果报告
@@ -156,7 +162,7 @@ class ImageProcessor:
         feature_2 = random.randint(0, 1)
 
         # 将报告以字典的形式储存在 redis 缓存中
-        report = dict(general_1=general_1, general_2=general_2, feature_1=feature_1, feature_2=feature_2)
+        report = dict(general_1=general_1, general_2=general_2, feature_1=feature_1, feature_2=feature_2, original_name=original_name)
         try:
             self.redis_handler.set_report(image_id=image_info["image_hash"], report=report)
         except:

@@ -59,8 +59,7 @@ def get_feature_images(user_id, feature, app, redishander):
     feature_images = []
     for image_name in total_images:
         report = redishander.get_report(image_name.split(".")[0])
-        report_s = {key.decode(): value.decode() for key, value in report.items()}
-        if int(report_s[feature]) == 1:
+        if int(report[feature]) == 1:
             feature_images.append(image_name)
 
     return feature_images
