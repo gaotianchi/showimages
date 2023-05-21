@@ -5,6 +5,7 @@
 
 import datetime
 import os
+import shutil
 
 from flask import Blueprint, redirect, request, current_app, session, url_for, \
 send_from_directory, jsonify, flash
@@ -135,4 +136,21 @@ def delete_this_one(image_name: str):
     
     redishandler.delete_report(image_id)
     
+    return "ok"
+
+
+@api_bp.route("/delete-all", methods=['GET', 'POST'])
+def delete_all():
+    user_id = session.get("USER_ID")
+    result_path = get_user_path(user_id, current_app)["user_result_path"]
+    upload_path = get_user_path(user_id, current_app)["user_upload_path"]
+    image_names: list[str] = os.listdir(result_path)
+    for image_name in image_names:
+        image_id = image_name.split(".")[0]
+        redishandler.delete_report(image_id)
+
+    for i in (result_path, upload_path):
+        shutil.rmtree(i)
+        os.makedirs(i)
+
     return "ok"

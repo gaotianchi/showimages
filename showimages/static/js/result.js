@@ -47,6 +47,18 @@ function findSmallImageContainerNode(bigImageSrc) {
 }
 
 
+deleteAllBtn.addEventListener(
+    "click",
+    async () => {
+        let message = confirm("你确定要删除所有个人数据吗？");
+        if (message == true) {
+            await fetch("api/delete-all")
+            location.href = "/";
+        }
+    }
+)
+
+
 deleteThisOneBtn.addEventListener(
     "click",
     async () => {
