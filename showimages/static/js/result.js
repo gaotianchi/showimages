@@ -29,7 +29,7 @@ function findSmallImageContainerNode(bigImageSrc) {
             }
             else if (i == smallImageContainers.length - 1 & smallImageContainers.length > 1) {
                 let nextNode = smallImageContainers[i - 1];
-                let nextNodeSrc = nextNode.querySelector("img").src;                return {
+                let nextNodeSrc = nextNode.querySelector("img").src; return {
                     "targetNode": targetNode,
                     "nextNodeSrc": nextNodeSrc
                 }
@@ -49,10 +49,19 @@ function findSmallImageContainerNode(bigImageSrc) {
 
 deleteThisOneBtn.addEventListener(
     "click",
-    () => {
+    async () => {
         let bigImageSrc = bigImage.src;
+        let imageName = bigImageSrc.split("/").pop();
+        let deleteUrl = `api/delete-this-one/${imageName}`;
+        await fetch(deleteUrl);
         let items = findSmallImageContainerNode(bigImageSrc);
         bigImage.src = items.nextNodeSrc;
+        let report = await getReportFromImageUrl(items.nextNodeSrc);
+        renderReport(report);
+        if (items.nextNodeSrc == "/static/delete-warning.png") {
+            location.reload();
+        }
+
         items.targetNode.parentElement.removeChild(items.targetNode);
     }
 )
