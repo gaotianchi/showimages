@@ -58,8 +58,16 @@ deleteThisOneBtn.addEventListener(
         bigImage.src = items.nextNodeSrc;
         let report = await getReportFromImageUrl(items.nextNodeSrc);
         renderReport(report);
+        let url = "api/processed-images"
+        let ImageItems = await getJsonItems(url);
+        let count = ImageItems.length;
         if (items.nextNodeSrc == "/static/delete-warning.png") {
-            location.reload();
+            if (count != 0) {
+                location.reload();
+            }
+            else {
+                location.href = "/";
+            }
         }
 
         items.targetNode.parentElement.removeChild(items.targetNode);
