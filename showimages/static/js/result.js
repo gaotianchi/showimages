@@ -198,30 +198,37 @@ function updateFeatureActive(currentFeatureItem) {
 }
 
 
-function initFeatureEvent() {
+function featureItemRegister(featureItem) {
+    featureItem.addEventListener(
+        "click",
+        async () => {
+            smallImageContainer.innerHTML = "";
+            updateFeatureActive(featureItem);
+            let feature = featureItem.querySelector("span").textContent;
+            let items = await getItems(feature, page = 1);
+            let imageItems = items.image_items;
+            let numPages = items.num_pages;
+            renderNavItems(numPages);
+
+            for (let i = 0; i < imageItems.length; i++) {
+                let imageUrl = imageItems[i]["image_url"];
+                let newImageNode = createImageItem(imageUrl);
+                await smallImageEventRegister(newImageNode);
+                smallImageContainer.appendChild(newImageNode);
+            }
+        }
+    );
+}
+
+
+
+function initFeatureEvents() {
     let featureItems = document.querySelectorAll("#feature-nav div");
     featureItems.forEach(
         (featureItem) => {
-            featureItem.addEventListener(
-                "click",
-                async () => {
-                    smallImageContainer.innerHTML = "";
-                    updateFeatureActive(featureItem);
-                    let feature = featureItem.querySelector("span").textContent;
-                    let items = await getItems(feature, page = 1);
-                    let imageItems = items.image_items;
-                    let numPages = items.num_pages;
-                    renderNavItems(numPages);
-
-                    for (let i = 0; i < imageItems.length; i++) {
-                        let imageUrl = imageItems[i]["image_url"];
-                        let newImageNode = createImageItem(imageUrl);
-                        await smallImageEventRegister(newImageNode);
-                        smallImageContainer.appendChild(newImageNode);
-                    }
-                }
-            );
+            featureItemRegister(featureItem);
         }
+
     );
 }
 
@@ -273,6 +280,6 @@ document.addEventListener("DOMContentLoaded",
     async () => {
         initSmallImageEvent();
         initNavEvent();
-        initFeatureEvent();
+        initFeatureEvents();
         await updateHadProcessedFileCount();
     });
