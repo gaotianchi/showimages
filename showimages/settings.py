@@ -20,6 +20,7 @@ class Config:
     PERMANENT_SESSION_LIFETIME = datetime.timedelta(hours=24)
 
     USER_DATA_PATH = os.path.join(basedir, "userdata")
+    TEMP_DIR = os.path.join(basedir, "temp")
     
     # ALLOWED_IMAGE_EXTENSIONS = ["png"]
 
@@ -28,3 +29,6 @@ class Config:
     def __init__(self) -> None:
         if not os.path.exists(self.USER_DATA_PATH):
             os.makedirs(self.USER_DATA_PATH)
+
+        if not os.path.exists(self.TEMP_DIR):
+            os.makedirs(self.TEMP_DIR)

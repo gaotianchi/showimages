@@ -7,6 +7,7 @@ import hashlib
 import math
 import os
 import time
+import zipfile
 
 from flask import Request, Flask
 
@@ -63,3 +64,9 @@ def get_feature_images(user_id, feature, app, redishander):
             feature_images.append(image_name)
 
     return feature_images
+
+
+def create_this_zip(file_data_dict: dict, result_zip_path: str):
+    with zipfile.ZipFile(result_zip_path, mode="w") as archive:
+        for file_name in file_data_dict.keys():
+            archive.writestr(zinfo_or_arcname=file_name, data=file_data_dict[file_name])

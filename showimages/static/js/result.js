@@ -10,6 +10,19 @@ const processed = document.querySelector(".processed  > span:nth-child(2)");
 const deleteThisOneBtn = document.getElementById("delete-this-one");
 const deleteAllBtn = document.getElementById("delete-all");
 const bigImage = document.getElementById("big-image");
+const downloadThisOneBtn = document.getElementById("download-this-one");
+
+
+downloadThisOneBtn.addEventListener(
+    "click",
+    async () => {
+        let bigImageSrc = bigImage.src;
+        let imageName = bigImageSrc.split("/").pop();
+        let downloadThisOneUrl = `api/download-this-one/${imageName}`;
+        await fetch(downloadThisOneUrl);
+        location.href = downloadThisOneUrl;
+    }
+)
 
 
 function findSmallImageContainerNode(bigImageSrc) {

@@ -4,15 +4,17 @@
 """
 
 import datetime
+import json
 import os
 import shutil
 
 from flask import Blueprint, redirect, request, current_app, session, url_for, \
-send_from_directory, jsonify, flash
+send_from_directory, jsonify, flash, send_file
 
 from showimages.forms import UploadForm
 from showimages.models import RedisHandler, ImageProcessor
-from showimages.utils import generate_user_id, get_feature_images, get_user_path, init_user, paging
+from showimages.utils import generate_user_id, get_feature_images, \
+    get_user_path, init_user, paging, create_this_zip
 
 
 api_bp = Blueprint("api", __name__)
@@ -154,3 +156,30 @@ def delete_all():
         os.makedirs(i)
 
     return "ok"
+
+
+@api_bp.route("/download-this-one/<image_name>")
+def download_this_one(image_name: str):
+    user_id = session.get("USER_ID")
+    result_path = get_user_path(user_id, current_app)["user_result_path"]
+    image_id = image_name.split(".")[0]
+    report = redishandler.get_report(image_id)
+    report_json = json.dumps(report, indent=4)
+    original_name: str = report["original_name"]
+    image_path = os.path.join(result_path, image_name)
+    name, image_format = original_name.split(".")
+
+    report_name = name + ".json"
+    image_name = name + "." + image_format
+
+    with open(image_path, "rb") as image:
+        image_data = image.read()
+
+    file_data_dict = {f"{image_name}": image_data, f"{report_name}": report_json}
+    zip_name = name + ".zip"
+    result_zip_path = os.path.join(current_app.config["TEMP_DIR"], zip_name)
+
+    create_this_zip(file_data_dict, result_zip_path)
+
+    return send_file(result_zip_path, as_attachment=True)
+
