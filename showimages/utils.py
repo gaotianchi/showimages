@@ -6,6 +6,7 @@
 import hashlib
 import math
 import os
+import pathlib
 import time
 import zipfile
 
@@ -70,3 +71,14 @@ def create_this_zip(file_data_dict: dict, result_zip_path: str):
     with zipfile.ZipFile(result_zip_path, mode="w") as archive:
         for file_name in file_data_dict.keys():
             archive.writestr(zinfo_or_arcname=file_name, data=file_data_dict[file_name])
+
+
+def creat_dir_zip(image_dir: str, name_map: dict, result_zip_path: str, report: str):
+    directory = pathlib.Path(image_dir)
+    with zipfile.ZipFile(result_zip_path, mode="w") as archive:
+        for file_path in directory.iterdir():
+            arcname = "images/" + name_map[file_path.name.split(".")[0]]
+            archive.write(file_path, arcname=arcname)
+
+        archive.writestr(zinfo_or_arcname="reports.json", data=report)
+        

@@ -11,6 +11,17 @@ const deleteThisOneBtn = document.getElementById("delete-this-one");
 const deleteAllBtn = document.getElementById("delete-all");
 const bigImage = document.getElementById("big-image");
 const downloadThisOneBtn = document.getElementById("download-this-one");
+const downloadAllBtn = document.getElementById("download-all");
+
+
+downloadAllBtn.addEventListener(
+    "click",
+    async () => {
+        let downloadAllUrl = "api/download-all";
+        await fetch(downloadAllUrl);
+        location.href = downloadAllUrl;
+    }
+)
 
 
 downloadThisOneBtn.addEventListener(

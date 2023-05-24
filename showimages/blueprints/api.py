@@ -13,7 +13,7 @@ send_from_directory, jsonify, flash, send_file
 
 from showimages.forms import UploadForm
 from showimages.models import RedisHandler, ImageProcessor
-from showimages.utils import generate_user_id, get_feature_images, \
+from showimages.utils import creat_dir_zip, generate_user_id, get_feature_images, \
     get_user_path, init_user, paging, create_this_zip
 
 
@@ -164,7 +164,7 @@ def download_this_one(image_name: str):
     result_path = get_user_path(user_id, current_app)["user_result_path"]
     image_id = image_name.split(".")[0]
     report = redishandler.get_report(image_id)
-    report_json = json.dumps(report, indent=4)
+    report_json = json.dumps(report, indent=4, ensure_ascii=False)
     original_name: str = report["original_name"]
     image_path = os.path.join(result_path, image_name)
     name, image_format = original_name.split(".")
@@ -183,3 +183,29 @@ def download_this_one(image_name: str):
 
     return send_file(result_zip_path, as_attachment=True)
 
+
+
+@api_bp.route("/download-all")
+def download_all():
+    user_id = session.get("USER_ID")
+    result_path = get_user_path(user_id, current_app)["user_result_path"]
+    image_names = os.listdir(result_path)
+    image_ids = map(lambda x: x.split(".")[0], image_names)
+    names_map = {}
+    reports = []
+    for image_id in image_ids:
+        original_name = redishandler.get_report(image_id)["original_name"]
+        names_map[image_id] = original_name
+        report = redishandler.get_report(image_id)
+        reports.append(report)
+
+    reports_json = json.dumps(reports, indent=4, ensure_ascii=False)
+
+    zip_file_name = str(datetime.datetime.now()).replace(" ", '').replace(".", "").replace(":", '') + '.zip'
+    result_zip_path = os.path.join(current_app.config["TEMP_DIR"], zip_file_name)
+
+
+
+    creat_dir_zip(result_path, names_map, result_zip_path, reports_json)
+    
+    return send_file(result_zip_path, as_attachment=True)
