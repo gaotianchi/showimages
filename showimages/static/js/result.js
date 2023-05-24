@@ -59,7 +59,7 @@ function findSmallImageContainerNode(bigImageSrc) {
                 }
             }
             else {
-                let nextNodeSrc = "/static/delete-warning.png";
+                let nextNodeSrc = "/static/images/delete-warning.png";
                 return {
                     "targetNode": targetNode,
                     "nextNodeSrc": nextNodeSrc
@@ -97,7 +97,7 @@ deleteThisOneBtn.addEventListener(
         let url = "api/processed-images"
         let ImageItems = await getJsonItems(url);
         let count = ImageItems.length;
-        if (items.nextNodeSrc == "/static/delete-warning.png") {
+        if (items.nextNodeSrc == "/static/images/delete-warning.png") {
             if (count != 0) {
                 location.reload();
             }
