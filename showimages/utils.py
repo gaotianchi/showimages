@@ -3,10 +3,12 @@
     :copyright: © 2023 高天驰 <6159984@gmail.com>
 """
 
+import datetime
 import hashlib
 import math
 import os
 import pathlib
+import shutil
 import time
 import zipfile
 
@@ -81,4 +83,17 @@ def creat_dir_zip(image_dir: str, name_map: dict, result_zip_path: str, report: 
             archive.write(file_path, arcname=arcname)
 
         archive.writestr(zinfo_or_arcname="reports.json", data=report)
+        
+
+def destroy_user_data(app: Flask, redishandler):
+    user_ids = os.listdir(app.config["USER_DATA_PATH"])
+    for user in user_ids:
+        expiration_time: str = redishandler.get_user_expiration_time(user).decode()
+        expiration_time_datatime = datetime.datetime.fromisoformat(expiration_time)
+        now = datetime.datetime.now().astimezone(datetime.timezone.utc)
+
+        if expiration_time_datatime < now:
+            user_data_path = os.path.join(app.config["USER_DATA_PATH"], user)
+            shutil.rmtree(user_data_path)
+            print(f"成功删除用户 {user} 的个人数据！")
         
