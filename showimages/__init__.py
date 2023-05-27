@@ -3,11 +3,13 @@
     :copyright: © 2023 高天驰 <6159984@gmail.com>
 """
 
+import logging
+from logging.handlers import RotatingFileHandler
 import os
 import threading
 
 from apscheduler.schedulers.blocking import BlockingScheduler
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_wtf.csrf import CSRFError
 
 from showimages.settings import Config
@@ -28,6 +30,7 @@ def create_app():
     register_extensions(app)
     register_errorhandlers(app)
     register_scheduler(app)
+    register_logging(app)
 
     return app
 
@@ -66,3 +69,15 @@ def register_errorhandlers(app: Flask):
     @app.errorhandler(500)
     def internal_server_error(e):
         return render_template('errors/500.html'), 500
+    
+
+def register_logging(app: Flask):
+    log_file_path = os.path.join(basedir, "log/showimages.log")
+    log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+    file_handler = RotatingFileHandler(log_file_path, maxBytes=10 * 1024 * 1024, backupCount=10, encoding='utf-8')
+    file_handler.setFormatter(log_formatter)
+    file_handler.setLevel(logging.INFO)
+
+    app.logger.addHandler(file_handler)
+    app.logger.setLevel(logging.INFO)

@@ -6,6 +6,7 @@
 import hashlib
 import os
 import random
+import logging
 
 
 from PIL import Image
@@ -16,6 +17,23 @@ load_dotenv()
 
 HOST = os.getenv("REDIS_HOST")
 PORT = os.getenv("REDIS_PORT")
+
+
+def setup_logging():
+    basedir = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+
+    log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+    file_handler = logging.FileHandler(os.path.join(basedir, "log", "showimages.log"), encoding='utf-8')
+    file_handler.setFormatter(log_formatter)
+    file_handler.setLevel(logging.INFO)
+
+    logger = logging.getLogger()
+    logger.addHandler(file_handler)
+    logger.setLevel(logging.INFO)
+
+setup_logging()
+
 
 
 class DatabaseMeta(type):
@@ -91,7 +109,7 @@ class ImageHandler:
                 
                 return image_data
         except IOError:
-            print(f"无法打开图片: {image_name}")
+            logging.info(f"无法打开图片: {image_name}")
             return None
 
     def get_image_info(self):
@@ -118,7 +136,7 @@ class ImageHandler:
                 "image_name": image_hash + '.' + image_format.lower(),
             }
         except IOError:
-            print(f"无法打开图片: {image_name} !")
+            logging.info(f"无法打开图片: {image_name} !")
             return None
         
 
@@ -174,15 +192,18 @@ class ImageProcessor:
         # 将报告以字典的形式储存在 redis 缓存中
         report = dict(general_1=general_1, general_2=general_2, feature_1=feature_1, feature_2=feature_2, original_name=original_name)
         try:
-            self.redis_handler.set_report(image_id=image_info["image_hash"], report=report)
+            image_id=image_info["image_hash"]
+            self.redis_handler.set_report(image_id=image_id, report=report)
+            logging.info(f"成功保存图片报告 {image_id}")
         except:
-            print("Fail")
+            logging.info(f"无法获取该图片的报告: {image_id}")
 
         try:
             with open(new_image_path, "wb") as image:
                 image.write(new_image_data)
+                logging.info(f"成功保存图片 {new_image_path}")
         except IOError:
-            print("Fail")
+            logging.info(f"无法保存该图片 {new_image_path}")
 
 
 

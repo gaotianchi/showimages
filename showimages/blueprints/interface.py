@@ -22,6 +22,7 @@ def index():
     user_id = session.get("USER_ID", "")
     if user_id:
         flash(f"欢迎！{user_id}")
+        current_app.logger.info('This is an info message')
     return render_template("index.html", form=form)
 
 
