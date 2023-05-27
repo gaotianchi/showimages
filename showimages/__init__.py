@@ -12,7 +12,7 @@ from flask_wtf.csrf import CSRFError
 
 from showimages.settings import Config
 from showimages.blueprints import interface_bp, api_bp
-from showimages.models import RedisHandler
+from showimages.models import redis_handler
 from showimages.extensions import csrf
 from showimages.utils import destroy_user_data, destroy_temp_data
 
@@ -27,18 +27,21 @@ def create_app():
     register_blueprints(app)
     register_extensions(app)
     register_errorhandlers(app)
+    register_scheduler(app)
+
+    return app
+
+
+def register_scheduler(app: Flask):
 
     def start_scheduler(scheduler: BlockingScheduler):
         scheduler.start()
 
-    redishandler = RedisHandler()
     scheduler = BlockingScheduler()
-    scheduler.add_job(destroy_user_data, 'interval', seconds=10, args=[app, redishandler])
+    scheduler.add_job(destroy_user_data, 'interval', seconds=10, args=[app, redis_handler])
     scheduler.add_job(destroy_temp_data, 'interval', seconds=10, args=[app])
     scheduler_thread = threading.Thread(target=start_scheduler, args=[scheduler])
     scheduler_thread.start()
-
-    return app
 
 
 def register_blueprints(app: Flask):

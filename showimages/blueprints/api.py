@@ -12,13 +12,12 @@ from flask import Blueprint, redirect, request, current_app, session, url_for, \
 send_from_directory, jsonify, flash, send_file
 
 from showimages.forms import UploadForm
-from showimages.models import RedisHandler, ImageProcessor
+from showimages.models import redis_handler, ImageProcessor
 from showimages.utils import creat_dir_zip, generate_user_id, get_feature_images, \
     get_user_path, init_user, paging, create_this_zip
 
 
 api_bp = Blueprint("api", __name__)
-redishandler = RedisHandler()
 
 
 @api_bp.before_request
@@ -35,7 +34,7 @@ def update_session():
     
     expiration_time = str(session.get("EXPIRATION_TIME"))
 
-    redishandler.set_expiration_time(user_id, expiration_time)
+    redis_handler.set_expiration_time(user_id, expiration_time)
 
 
 @api_bp.route('/upload', methods=['GET', 'POST'])
@@ -48,7 +47,7 @@ def upload_image():
         for file in request.files.getlist("photo"):
             image_name = file.filename
             file.save(os.path.join(upload_path, image_name))
-            redishandler.add_uploading(session.get("USER_ID"), image_name)
+            redis_handler.add_uploading(session.get("USER_ID"), image_name)
         success = True
     else:
         success = False
@@ -59,7 +58,7 @@ def upload_image():
 @api_bp.route("/get-report/<filename>")
 def get_report(filename: str):
     image_id = filename.split(".")[0]
-    image_report = redishandler.get_report(image_id)
+    image_report = redis_handler.get_report(image_id)
 
     return jsonify(image_report)
 
@@ -88,14 +87,14 @@ def get_page_urls(feature="All"):
     per_page = current_app.config["IMAGE_PER_PAGE"]
     current_page = request.args.get("page", 1, int)
     user_id = session.get("USER_ID", "")
-    image_names = get_feature_images(user_id, feature, current_app, redishander=redishandler)
+    image_names = get_feature_images(user_id, feature, current_app, redishander=redis_handler)
 
     page_images, num_pages = paging(image_names, current_page, per_page)
 
     image_items = []
     for image in page_images:
         image_hash = image.split(".")[0]
-        image_report = redishandler.get_report(image_hash)
+        image_report = redis_handler.get_report(image_hash)
         image_url = url_for("api.send_image_from_dir", filename=image)
         image_item = dict(image_url=image_url, image_report=image_report)
         image_items.append(image_item)
@@ -130,13 +129,13 @@ def delete_this_one(image_name: str):
     result_path = get_user_path(user_id, current_app)["user_result_path"]
     upload_path = get_user_path(user_id, current_app)["user_upload_path"]
     image_id = image_name.split(".")[0]
-    report = redishandler.get_report(image_id)
+    report = redis_handler.get_report(image_id)
     upload_image_path = os.path.join(upload_path, report["original_name"])
     result_image_path = os.path.join(result_path, image_name)
     os.remove(upload_image_path)
     os.remove(result_image_path)
     
-    redishandler.delete_report(image_id)
+    redis_handler.delete_report(image_id)
     
     return "ok"
 
@@ -149,7 +148,7 @@ def delete_all():
     image_names: list[str] = os.listdir(result_path)
     for image_name in image_names:
         image_id = image_name.split(".")[0]
-        redishandler.delete_report(image_id)
+        redis_handler.delete_report(image_id)
 
     for i in (result_path, upload_path):
         shutil.rmtree(i)
@@ -163,7 +162,7 @@ def download_this_one(image_name: str):
     user_id = session.get("USER_ID")
     result_path = get_user_path(user_id, current_app)["user_result_path"]
     image_id = image_name.split(".")[0]
-    report = redishandler.get_report(image_id)
+    report = redis_handler.get_report(image_id)
     report_json = json.dumps(report, indent=4, ensure_ascii=False)
     original_name: str = report["original_name"]
     image_path = os.path.join(result_path, image_name)
@@ -194,9 +193,9 @@ def download_all():
     names_map = {}
     reports = []
     for image_id in image_ids:
-        original_name = redishandler.get_report(image_id)["original_name"]
+        original_name = redis_handler.get_report(image_id)["original_name"]
         names_map[image_id] = original_name
-        report = redishandler.get_report(image_id)
+        report = redis_handler.get_report(image_id)
         reports.append(report)
 
     reports_json = json.dumps(reports, indent=4, ensure_ascii=False)

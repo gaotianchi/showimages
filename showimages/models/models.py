@@ -7,20 +7,30 @@ import hashlib
 import os
 import random
 
+
 from PIL import Image
 import redis
+from dotenv import load_dotenv
+
+load_dotenv()
+
+HOST = os.getenv("REDIS_HOST")
+PORT = os.getenv("REDIS_PORT")
 
 
-class Handler:
+class DatabaseMeta(type):
+    _instances = {}
 
-    def __init__(self) -> None:
-        pass
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super().__call__(*args, **kwargs)
+        return cls._instances[cls]
 
 
-class RedisHandler:
+class RedisHandler(metaclass=DatabaseMeta):
     """Redis数据库操作句柄"""
 
-    def __init__(self, host="localhost", port=6379) -> None:
+    def __init__(self, host=HOST, port=PORT) -> None:
         pool = redis.ConnectionPool(host=host, port=port)
         
         self.handler = redis.Redis(connection_pool=pool, decode_responses=True)
