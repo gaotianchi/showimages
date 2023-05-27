@@ -96,4 +96,14 @@ def destroy_user_data(app: Flask, redishandler):
             user_data_path = os.path.join(app.config["USER_DATA_PATH"], user)
             shutil.rmtree(user_data_path)
             print(f"成功删除用户 {user} 的个人数据！")
+        else:
+            print(f"用户 {user} session 有效。")
         
+
+def destroy_temp_data(app: Flask):
+    temp_path = app.config["TEMP_DIR"]
+    temp_items = os.listdir(temp_path)
+    for temp_item in temp_items:
+        item_path = os.path.join(temp_path, temp_item)
+        os.remove(item_path)
+        print(f"成功移除 {temp_item}")

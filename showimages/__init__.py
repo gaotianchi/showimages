@@ -14,7 +14,7 @@ from showimages.settings import Config
 from showimages.blueprints import interface_bp, api_bp
 from showimages.models import RedisHandler
 from showimages.extensions import csrf
-from showimages.utils import destroy_user_data
+from showimages.utils import destroy_user_data, destroy_temp_data
 
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
@@ -33,7 +33,8 @@ def create_app():
 
     redishandler = RedisHandler()
     scheduler = BlockingScheduler()
-    scheduler.add_job(destroy_user_data, 'interval', seconds=10800, args=[app, redishandler])
+    scheduler.add_job(destroy_user_data, 'interval', seconds=10, args=[app, redishandler])
+    scheduler.add_job(destroy_temp_data, 'interval', seconds=10, args=[app])
     scheduler_thread = threading.Thread(target=start_scheduler, args=[scheduler])
     scheduler_thread.start()
 
