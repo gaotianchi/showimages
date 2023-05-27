@@ -7,7 +7,8 @@ import os
 import threading
 
 from apscheduler.schedulers.blocking import BlockingScheduler
-from flask import Flask
+from flask import Flask, render_template
+from flask_wtf.csrf import CSRFError
 
 from showimages.settings import Config
 from showimages.blueprints import interface_bp, api_bp
@@ -25,6 +26,7 @@ def create_app():
 
     register_blueprints(app)
     register_extensions(app)
+    register_errorhandlers(app)
 
     def start_scheduler(scheduler: BlockingScheduler):
         scheduler.start()
@@ -45,3 +47,18 @@ def register_blueprints(app: Flask):
 
 def register_extensions(app: Flask):
     csrf.init_app(app)
+
+
+def register_errorhandlers(app: Flask):
+
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return render_template('errors/404.html'), 404
+    
+    @app.errorhandler(CSRFError)
+    def handle_csrf_error(e):
+        return render_template('errors/400.html', description=e.description), 500
+    
+    @app.errorhandler(500)
+    def internal_server_error(e):
+        return render_template('errors/500.html'), 500

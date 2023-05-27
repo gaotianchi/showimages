@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>404 ERROR</title>
+{% endblock title %}
+
+{% block header %}
+<header>
+    <div id="logo-container">
+        <a href="{{ url_for('interface.index') }}"><img id="logo" src="{{ url_for('static', filename='images/logo.jpg') }}" alt="logo" height="50px" width="50px"></a>
+    </div>
+    <div id="title-container">
+        <span>Photonical</span>
+    </div>
+</header>
+{% endblock header %}
+
+{% block main %}
+    <h1 style="text-align: center;">没有找到这一页</h1>
+    <h2 style="text-align: center;">可能是因为网络问题、该页面不存在或者没有什么数据需要呈现，您可以考虑现在首页上传图片。</h2>
+{% endblock main %}

@@ -15,6 +15,18 @@ uploadFile = document.getElementById("upload-file");
 const statusContainer = document.getElementById("status-container");
 const upload = document.querySelector(".upload > span:nth-child(2)");
 const processed = document.querySelector(".processed  > span:nth-child(2)");
+const resultLink = document.querySelector("#status > div.processed > span:nth-child(1) > a");
+
+
+resultLink.addEventListener(
+    "click",
+    () => {
+        const num = document.querySelector("#status > div.processed > span:nth-child(2)").textContent;
+        if (Number(num) == 0) {
+            alert("还没有上传任何图片！");
+        }
+    }
+)
 
 
 btns.forEach(

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Internal Server Error</title>
+{% endblock title %}
+
+{% block header %}
+<header>
+    <div id="logo-container">
+        <a href="{{ url_for('interface.index') }}"><img id="logo" src="{{ url_for('static', filename='images/logo.jpg') }}" alt="logo" height="50px" width="50px"></a>
+    </div>
+    <div id="title-container">
+        <span>Photonical</span>
+    </div>
+</header>
+{% endblock header %}
+
+{% block main %}
+    <h1 style="text-align: center;">网络服务器出现错误</h1>
+    <h2 style="text-align: center;">服务器遇到内部错误，无法完成您的请求。服务器过载或应用程序中存在错误。</h2>
+{% endblock main %}
